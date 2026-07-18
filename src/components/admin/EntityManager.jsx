@@ -17,13 +17,13 @@ function toSnakeCase(str) {
     .replace(/^_/, '');
 }
 
-export default function EntityManager({ entityName, queryKey, fields, renderCard }) {
+export default function EntityManager({ entityName, queryKey, fields, renderCard, tableName }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [formData, setFormData] = useState({});
   const queryClient = useQueryClient();
 
-  const table = toSnakeCase(entityName);
+  const table = tableName || toSnakeCase(entityName);
 
   const { data: items, isLoading } = useQuery({
     queryKey: [queryKey],

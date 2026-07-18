@@ -16,6 +16,7 @@ export default function AdminDestinations() {
     <EntityManager
       entityName="Destination"
       queryKey="destinations"
+      tableName="destinations"
       fields={fields}
       renderCard={(item) => (
         <div className="flex items-center gap-3">
