@@ -1,0 +1,32 @@
+{
+  "name": "TeamMember",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "role_en": {
+      "type": "string"
+    },
+    "role_id": {
+      "type": "string"
+    },
+    "bio_en": {
+      "type": "string"
+    },
+    "bio_id": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "role_en"
+  ]
+}

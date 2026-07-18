@@ -1,0 +1,27 @@
+import { jsPDF } from 'jspdf';
+
+export function generateInvoicePDF(booking, invoice, settings) {
+  const doc = new jsPDF();
+  
+  // 1. Branding Header
+  doc.setFontSize(22);
+  doc.text("INVOICE", 105, 20, { align: 'center' });
+  
+  // 2. Client Info
+  doc.setFontSize(10);
+  doc.text(`Client: ${booking.customer_name}`, 20, 40);
+  
+  // 3. Line Items Loop
+  let y = 60;
+  invoice.line_items.forEach(item => {
+    doc.text(item.description, 20, y);
+    doc.text(item.amount.toString(), 180, y, { align: 'right' });
+    y += 10;
+  });
+  
+  // 4. Totals Block
+  doc.line(20, y, 190, y);
+  doc.text(`Total: ${invoice.currency} ${invoice.amount}`, 180, y + 10, { align: 'right' });
+
+  doc.save(`Invoice-${invoice.invoice_number}.pdf`);
+}

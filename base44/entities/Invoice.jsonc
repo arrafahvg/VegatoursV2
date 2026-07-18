@@ -1,0 +1,76 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "Reference to Booking entity ID"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "e.g. INV-2024-001-DP"
+    },
+    "label": {
+      "type": "string",
+      "description": "e.g. Down Payment, Second Payment, Final Payment, Additional Charges"
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Itemized list of charges"
+    },
+    "tax_percentage": {
+      "type": "number",
+      "description": "Optional tax percentage e.g. 11 for 11%"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Total amount (auto-calculated from line items + tax)"
+    },
+    "currency": {
+      "type": "string",
+      "default": "IDR"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "paid",
+        "overdue",
+        "cancelled"
+      ],
+      "default": "unpaid"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "bank_transfer",
+        "qris",
+        "cash",
+        "other"
+      ],
+      "default": "bank_transfer"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "booking_id",
+    "amount"
+  ]
+}

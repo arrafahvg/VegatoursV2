@@ -1,0 +1,22 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Setting identifier"
+    },
+    "value": {
+      "type": "string",
+      "description": "Setting value"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label"
+    }
+  },
+  "required": [
+    "key",
+    "value"
+  ]
+}
