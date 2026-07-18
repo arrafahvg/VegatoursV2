@@ -75,19 +75,16 @@ export default function Destinations() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
             >
-              <a
-                href={WHATSAPP_MESSAGE_URL(`Hi! I'd like to explore ${item.name} in Bali.`)}
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
                 className="block group relative rounded-2xl overflow-hidden aspect-[3/4]"
               >
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h3 className="font-serif text-2xl text-white font-light mb-1">{item.name}</h3>
                   <p className="text-white/70 text-sm leading-relaxed">{item.desc}</p>
                 </div>
-              </a>
+              </div>
             </motion.div>
           ))}
         </div>
