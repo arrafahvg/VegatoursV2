@@ -35,7 +35,7 @@ export default function AdminUsers() {
   });
 
   const handleDelete = async (user) => {
-    if (!window.confirm(`Delete user "${user.full_name || user.email}"? This cannot be undone.`)) return;
+    if (!window.confirm(`Delete user "${user.name || user.email}"? This cannot be undone.`)) return;
     setDeletingId(user.id);
     try {
       const { error } = await supabase.from('users').delete().eq('id', user.id);
@@ -99,9 +99,9 @@ export default function AdminUsers() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-semibold text-primary">{u.full_name?.[0] || '?'}</span>
+                        <span className="text-sm font-semibold text-primary">{u.name?.[0] || '?'}</span>
                       </div>
-                      <span className="font-medium text-foreground text-sm">{u.full_name || '—'}</span>
+                      <span className="font-medium text-foreground text-sm">{u.name || '—'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 hidden sm:table-cell">

@@ -3,9 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Package, MessageSquare, Users, Image, HelpCircle, LayoutDashboard,
   ArrowLeft, Settings, Inbox, Building2, Car, Briefcase, CreditCard,
-  MapPin, ChevronDown, Globe
+  MapPin, ChevronDown, Globe, LogOut, Shield
 } from 'lucide-react';
 import { LOGO_URL } from '@/lib/constants';
+import { useAuth } from '@/lib/AuthContext';
 
 const menuGroups = [
   {
@@ -44,8 +45,11 @@ const menuGroups = [
   },
 ];
 
+const ROLE_LABELS = { admin: 'Admin', super_admin: 'Super Admin', user: 'User' };
+
 export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
   const location = useLocation();
+  const { user, logout } = useAuth();
   const [openGroups, setOpenGroups] = useState(() =>
     menuGroups.reduce((acc, g) => ({ ...acc, [g.label]: true }), {})
   );
@@ -103,7 +107,31 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border/50">
+      {/* User profile section */}
+      {user && (
+        <div className="px-4 py-3 border-t border-border/50">
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-secondary/30">
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <span className="text-sm font-semibold text-primary">{user.name?.[0] || user.email?.[0]?.toUpperCase() || '?'}</span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-foreground truncate">{user.name || 'User'}</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Shield className="w-3 h-3 text-primary" />
+                <span className="text-[11px] font-medium text-primary">{ROLE_LABELS[user.role] || user.role || 'User'}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => logout()}
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="p-4 pt-2 border-t border-border/50">
         <Link
           to="/"
           className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
