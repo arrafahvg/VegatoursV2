@@ -7,6 +7,7 @@ const fields = [
   { key: 'name_id', label: 'Name (Bahasa Indonesia)', type: 'text', placeholder: 'e.g. Ubud' },
   { key: 'desc_en', label: 'Description (English)', type: 'textarea', placeholder: 'Short description...' },
   { key: 'desc_id', label: 'Description (Bahasa Indonesia)', type: 'textarea', placeholder: 'Deskripsi singkat...' },
+  { key: 'is_featured', label: 'Featured', type: 'boolean' },
   { key: 'sort_order', label: 'Sort Order', type: 'number' },
 ];
 

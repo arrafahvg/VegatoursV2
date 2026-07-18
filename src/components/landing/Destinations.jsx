@@ -21,6 +21,19 @@ export default function Destinations() {
   const { data: destinations } = useQuery({
     queryKey: ['destinations'],
     queryFn: async () => {
+      // Try with is_featured filter first (requires migration 005 to be applied)
+      try {
+        const { data, error } = await supabase
+          .from('destinations')
+          .select('*')
+          .eq('is_featured', true)
+          .order('sort_order', { ascending: true });
+        if (error) throw error;
+        if (data && data.length > 0) return data;
+      } catch (e) {
+        console.warn('is_featured filter failed, falling back to all destinations:', e.message);
+      }
+      // Fallback: if is_featured column doesn't exist yet, fetch all destinations
       const { data, error } = await supabase
         .from('destinations')
         .select('*')

@@ -115,6 +115,7 @@ CREATE TABLE public.destinations (
   name_en     VARCHAR(255),
   sort_order  INTEGER,
   image_url   TEXT,
+  is_featured BOOLEAN  NOT NULL DEFAULT false,
   -- Base44 metadata
   id            VARCHAR(24)  PRIMARY KEY,
   created_date  TIMESTAMPTZ  NOT NULL DEFAULT now(),
