@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLang } from '@/lib/i18n';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WHATSAPP_URL, LOGO_URL } from '@/lib/constants';
 import { Link, useNavigate } from 'react-router-dom';
 
-const navLinks = ['services', 'packages', 'destinations', 'gallery', 'about', 'contact'];
+const navLinks = ['services', 'destinations', 'gallery', 'about', 'contact'];
 
 export default function Navbar({ solid = false }) {
   const { lang, toggleLang, t } = useLang();
@@ -51,28 +51,44 @@ export default function Navbar({ solid = false }) {
             </Link>
 
             <div className="hidden lg:flex items-center gap-8">
+              {/* Our Product Dropdown */}
+              <div className="relative group">
+                <button
+                  className={`flex items-center gap-1 text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    isSolid ? 'text-foreground/70' : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  {t('nav.ourProduct')}
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="bg-card border border-border/50 rounded-xl shadow-xl overflow-hidden min-w-[180px]">
+                    <Link
+                      to="/packages"
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground/80 hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      {t('nav.packages')}
+                    </Link>
+                    <Link
+                      to="/bike-rent"
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground/80 hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      {t('nav.bikeRent')}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
               {navLinks.map((link) => (
-                link === 'packages' ? (
-                  <Link
-                    key={link}
-                    to="/packages"
-                    className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                      isSolid ? 'text-foreground/70' : 'text-white/80 hover:text-white'
-                    }`}
-                  >
-                    {t(`nav.${link}`)}
-                  </Link>
-                ) : (
-                  <button
-                    key={link}
-                    onClick={() => scrollTo(link)}
-                    className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                      isSolid ? 'text-foreground/70' : 'text-white/80 hover:text-white'
-                    }`}
-                  >
-                    {t(`nav.${link}`)}
-                  </button>
-                )
+                <button
+                  key={link}
+                  onClick={() => scrollTo(link)}
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    isSolid ? 'text-foreground/70' : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  {t(`nav.${link}`)}
+                </button>
               ))}
             </div>
 
@@ -115,25 +131,37 @@ export default function Navbar({ solid = false }) {
             className="fixed inset-0 z-40 lg:hidden bg-card/98 backdrop-blur-lg pt-20"
           >
             <div className="flex flex-col items-center gap-6 py-8">
-              {navLinks.map((link) => (
-                link === 'packages' ? (
+              {/* Our Product section in mobile */}
+              <div className="w-full max-w-xs">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-3 text-center">
+                  {t('nav.ourProduct')}
+                </p>
+                <div className="flex flex-col gap-2">
                   <Link
-                    key={link}
                     to="/packages"
                     onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors text-center"
                   >
-                    {t(`nav.${link}`)}
+                    {t('nav.packages')}
                   </Link>
-                ) : (
-                  <button
-                    key={link}
-                    onClick={() => scrollTo(link)}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                  <Link
+                    to="/bike-rent"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors text-center"
                   >
-                    {t(`nav.${link}`)}
-                  </button>
-                )
+                    {t('nav.bikeRent')}
+                  </Link>
+                </div>
+              </div>
+              <div className="w-12 h-px bg-border/50" />
+              {navLinks.map((link) => (
+                <button
+                  key={link}
+                  onClick={() => scrollTo(link)}
+                  className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                >
+                  {t(`nav.${link}`)}
+                </button>
               ))}
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-4">
                 <Button className="bg-primary text-primary-foreground rounded-full px-8 py-3 text-base">

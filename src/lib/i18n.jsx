@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const translations = {
   en: {
-    nav: { home: 'Home', services: 'Services', packages: 'Tour Packages', destinations: 'Destinations', gallery: 'Gallery', about: 'About', contact: 'Contact', faq: 'FAQ' },
+    nav: { home: 'Home', services: 'Services', ourProduct: 'Our Product', packages: 'Tour Packages', bikeRent: 'Bike Rent', destinations: 'Destinations', gallery: 'Gallery', about: 'About', contact: 'Contact', faq: 'FAQ' },
     hero: {
       headline: 'Explore Your Way',
       subheadline: 'Private tours, custom itineraries, and trusted local travel facilitators helping you experience the best.',
@@ -90,7 +90,7 @@ const translations = {
     whatsapp: { cta: 'Chat on WhatsApp', mobileCta: 'Plan My Trip' },
   },
   id: {
-    nav: { home: 'Beranda', services: 'Layanan', packages: 'Paket Tur', destinations: 'Destinasi', gallery: 'Galeri', about: 'Tentang', contact: 'Kontak', faq: 'FAQ' },
+    nav: { home: 'Beranda', services: 'Layanan', ourProduct: 'Produk Kami', packages: 'Paket Tur', bikeRent: 'Sewa Motor', destinations: 'Destinasi', gallery: 'Galeri', about: 'Tentang', contact: 'Kontak', faq: 'FAQ' },
     hero: {
       headline: 'Jelajahi Sesuai Gayamu',
       subheadline: 'Tur privat, itinerari kustom, dan fasilitator perjalanan lokal terpercaya membantu Anda merasakan yang terbaik.',

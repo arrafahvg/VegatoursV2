@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Package, MessageSquare, Users, Image, HelpCircle, LayoutDashboard,
   ArrowLeft, Settings, Inbox, Building2, Car, Briefcase, CreditCard,
-  MapPin, ChevronDown, Globe, LogOut, Shield
+  MapPin, ChevronDown, Globe, LogOut, Shield, Bike
 } from 'lucide-react';
 import { LOGO_URL } from '@/lib/constants';
 import { useAuth } from '@/lib/AuthContext';
@@ -28,6 +28,7 @@ const menuGroups = [
     items: [
       { label: 'Tour Packages', icon: Package, path: '/admin/packages' },
       { label: 'Fleet', icon: Car, path: '/admin/fleet' },
+      { label: 'Bike Rent', icon: Bike, path: '/admin/bikes' },
       { label: 'Featured Destinations', icon: MapPin, path: '/admin/destinations' },
       { label: 'Partners', icon: Building2, path: '/admin/partners' },
       { label: 'Testimonials', icon: MessageSquare, path: '/admin/testimonials' },

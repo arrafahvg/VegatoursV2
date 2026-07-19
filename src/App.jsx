@@ -10,6 +10,7 @@ import { LOGO_URL } from '@/lib/constants';
 import Home from '@/pages/Home';
 import TeamPage from '@/pages/TeamPage';
 import PackagesPage from '@/pages/PackagesPage';
+import BikeRentPage from '@/pages/BikeRentPage';
 import AdminLayout from '@/pages/admin/AdminLayout';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminPackages from '@/pages/admin/AdminPackages';
@@ -22,6 +23,7 @@ import AdminInquiries from '@/pages/admin/AdminInquiries';
 import AdminPartners from '@/pages/admin/AdminPartners';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminFleet from '@/pages/admin/AdminFleet';
+import AdminBikes from '@/pages/admin/AdminBikes';
 import AdminDestinations from '@/pages/admin/AdminDestinations';
 import AdminCRM from '@/pages/admin/AdminCRM';
 import AdminPaymentSettings from '@/pages/admin/AdminPaymentSettings';
@@ -50,6 +52,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/team" element={<TeamPage />} />
       <Route path="/packages" element={<PackagesPage />} />
+      <Route path="/bike-rent" element={<BikeRentPage />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="packages" element={<AdminPackages />} />
@@ -62,6 +65,7 @@ const AuthenticatedApp = () => {
         <Route path="partners" element={<AdminPartners />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="fleet" element={<AdminFleet />} />
+        <Route path="bikes" element={<AdminBikes />} />
         <Route path="destinations" element={<AdminDestinations />} />
         <Route path="crm" element={<AdminCRM />} />
         <Route path="payment-settings" element={<AdminPaymentSettings />} />
