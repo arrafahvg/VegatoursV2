@@ -8,6 +8,7 @@ import BookingForm from '@/components/crm/BookingForm';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { generateId } from '@/lib/utils';
 
 const STATUS_LABELS = { lead: 'Lead', confirmed: 'Confirmed', ongoing: 'Ongoing', completed: 'Completed', cancelled: 'Cancelled' };
 
@@ -35,7 +36,7 @@ export default function AdminCRM() {
         const { error } = await supabase.from('bookings').update(data).eq('id', selected.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('bookings').insert({ ...data, booking_code: `VBT-${Date.now().toString().slice(-6)}` });
+        const { error } = await supabase.from('bookings').insert({ id: generateId(), ...data, booking_code: `VBT-${Date.now().toString().slice(-6)}` });
         if (error) throw error;
       }
     },

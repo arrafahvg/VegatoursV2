@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { generateInvoicePDF } from '@/lib/pdfUtils';
 import { whatsappSendTo } from '@/lib/constants';
+import { generateId } from '@/lib/utils';
 
 const STATUS_COLORS = {
   unpaid: 'bg-orange-100 text-orange-700',
@@ -131,7 +132,7 @@ export default function InvoicesPanel({ booking }) {
         const { error } = await supabase.from('invoices').update(payload).eq('id', editing.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('invoices').insert({ ...payload, booking_id: booking.id, invoice_number: invNum });
+        const { error } = await supabase.from('invoices').insert({ id: generateId(), ...payload, booking_id: booking.id, invoice_number: invNum });
         if (error) throw error;
       }
     },
