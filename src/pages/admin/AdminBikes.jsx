@@ -23,6 +23,7 @@ export default function AdminBikes() {
       entityName="Bikes"
       queryKey="bikes"
       fields={fields}
+      missingFieldWarning={['is_available']}
       renderCard={(item) => (
         <div className="flex items-center gap-3">
           {item.image_url && (

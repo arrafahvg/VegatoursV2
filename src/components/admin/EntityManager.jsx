@@ -17,7 +17,7 @@ function toSnakeCase(str) {
     .replace(/^_/, '');
 }
 
-export default function EntityManager({ entityName, queryKey, fields, renderCard, tableName }) {
+export default function EntityManager({ entityName, queryKey, fields, renderCard, tableName, missingFieldWarning }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [formData, setFormData] = useState({});
@@ -40,6 +40,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
       const { error } = await supabase.from(table).insert(data);
       if (error) throw error;
     },
+    onError: (err) => {
+      toast.error(err?.message || 'Create failed');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       toast.success('Created successfully');
@@ -52,6 +55,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
       const { error } = await supabase.from(table).update(data).eq('id', id);
       if (error) throw error;
     },
+    onError: (err) => {
+      toast.error(err?.message || 'Update failed');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       toast.success('Updated successfully');
@@ -63,6 +69,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
     mutationFn: async (id) => {
       const { error } = await supabase.from(table).delete().eq('id', id);
       if (error) throw error;
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'Delete failed');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey] });
@@ -113,6 +122,11 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
     setFormData(prev => ({ ...prev, [key]: value }));
   };
 
+  // Detect whether the admin is missing expected column(s) (e.g. is_available),
+  // because then saving the toggle would silently fail. Show a helpful banner.
+  const missingColumns = (missingFieldWarning || [])
+    .filter(key => items.length > 0 && items.every(item => !(key in item)));
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -121,6 +135,22 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
           <Plus className="w-4 h-4" /> Add New
         </Button>
       </div>
+
+      {missingColumns.length > 0 && (
+        <div className="mb-6 p-4 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-800 text-sm leading-relaxed">
+          <p className="font-semibold mb-1">
+            The '{missingColumns.join(', ')}' column doesn't exist yet in your Supabase database.
+          </p>
+          <p>
+            The availability toggle won't save until migration <code>007_add_is_available_to_bikes.sql</code>{' '}
+            is applied. Open your Supabase project → SQL Editor and run:
+            <code className="block mt-1 bg-amber-100 px-2 py-1 rounded">
+              ALTER TABLE public.bikes ADD COLUMN IF NOT EXISTS is_available BOOLEAN NOT NULL DEFAULT true;
+            </code>
+            then refresh this page.
+          </p>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="text-center py-12 text-muted-foreground">Loading...</div>
