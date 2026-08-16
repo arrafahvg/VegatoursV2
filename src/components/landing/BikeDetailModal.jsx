@@ -10,6 +10,7 @@ export default function BikeDetailModal({ bike, open, onClose }) {
   if (!bike) return null;
 
   const isId = lang === 'id';
+  const unavailable = bike.is_available === false;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -106,6 +107,12 @@ export default function BikeDetailModal({ bike, open, onClose }) {
           )}
 
           {/* Rent Now CTA */}
+          {unavailable ? (
+            <div className="flex items-center justify-center gap-2 w-full rounded-full border border-border/50 py-3 text-sm font-medium text-muted-foreground">
+              <AlertCircle className="w-4 h-4" />
+              {isId ? 'Saat ini tidak tersedia untuk disewa' : 'Currently not available for rent'}
+            </div>
+          ) : (
           <a
             href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)}
             target="_blank"
@@ -116,6 +123,7 @@ export default function BikeDetailModal({ bike, open, onClose }) {
               {isId ? 'Sewa Sekarang' : 'Rent Now'}
             </Button>
           </a>
+          )}
 
           {/* Disclaimer */}
           <div className="flex items-start gap-1.5 pt-2 border-t border-border/50">

@@ -5,9 +5,8 @@ import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
-import { Clock, Star, ArrowRight, CheckCircle, Info, Bike } from 'lucide-react';
+import { ArrowRight, CheckCircle, Info, Bike } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
@@ -15,7 +14,7 @@ import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import BikeDetailModal from '@/components/landing/BikeDetailModal';
 
 function BikeRentContent() {
-  const { t, lang } = useLang();
+  const { lang } = useLang();
   const [selectedBike, setSelectedBike] = useState(null);
 
   useEffect(() => {
@@ -25,12 +24,24 @@ function BikeRentContent() {
   const { data: bikes, isLoading } = useQuery({
     queryKey: ['bikes'],
     queryFn: async () => {
+      // Prefer filtering available bikes server-side (requires migration 007).
+      try {
+        const { data, error } = await supabase
+          .from('bikes')
+          .select('*')
+          .eq('is_available', true)
+          .order('sort_order', { ascending: true });
+        if (!error && data) return data;
+      } catch (e) {
+        console.warn('is_available filter failed, falling back to client-side filter:', e.message);
+      }
+      // Fallback: the is_available column may not exist yet — fetch all and filter now.
       const { data, error } = await supabase
         .from('bikes')
         .select('*')
         .order('sort_order', { ascending: true });
       if (error) throw error;
-      return data || [];
+      return (data || []).filter((b) => b.is_available !== false);
     },
     initialData: [],
   });
@@ -80,28 +91,25 @@ function BikeRentContent() {
               ))}
             </div>
           ) : bikes.length === 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { name: 'Honda Vario 150', type: 'Automatic', capacity: '150cc', features: ['Helmet Included', 'Good Condition', 'Fuel Efficient'] },
-                { name: 'Yamaha NMAX', type: 'Automatic', capacity: '155cc', features: ['Helmet Included', 'ABS Brakes', 'Comfortable Seat'] },
-                { name: 'Honda CB150R', type: 'Manual', capacity: '150cc', features: ['Helmet Included', 'Sport Bike', 'Powerful Engine'] },
-              ].map((v, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="bg-card border border-border/50 rounded-2xl p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold text-primary tracking-widest uppercase">{v.type}</span>
-                    <span className="flex items-center gap-1 text-sm text-muted-foreground"><Bike className="w-3.5 h-3.5" /> {v.capacity}</span>
-                  </div>
-                  <h3 className="font-serif text-lg font-medium text-foreground mb-4">{v.name}</h3>
-                  <div className="space-y-1.5">
-                    {v.features.map((f, j) => (
-                      <div key={j} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" /> {f}
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+            <div className="text-center py-12 max-w-lg mx-auto">
+              <p className="font-serif text-xl sm:text-2xl font-light text-foreground mb-3">
+                {lang === 'id' ? 'Saat ini belum ada motor yang tersedia' : 'No bikes are currently available'}
+              </p>
+              <p className="text-muted-foreground mb-6">
+                {lang === 'id'
+                  ? 'Silakan hubungi kami untuk informasi ketersediaan terbaru.'
+                  : 'Please contact us for the latest availability.'}
+              </p>
+              <a
+                href={WHATSAPP_MESSAGE_URL("Hi! I'd like to check the current bike availability.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full">
+                  {lang === 'id' ? 'Hubungi Kami' : 'Contact Us'}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

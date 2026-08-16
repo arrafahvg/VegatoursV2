@@ -13,6 +13,7 @@ const fields = [
   { key: 'features', label: 'Features / Fasilitas Tambahan', type: 'array' },
   { key: 'image_url', label: 'Photo', type: 'image' },
   { key: 'price_note', label: 'Price Note', type: 'text', placeholder: 'e.g. Harga per hari,不包括 bensin' },
+  { key: 'is_available', label: 'Available for Rent / Tersedia Untuk Disewa', type: 'boolean' },
   { key: 'sort_order', label: 'Sort Order', type: 'number' },
 ];
 
@@ -28,7 +29,14 @@ export default function AdminBikes() {
             <img src={item.image_url} alt={item.name} className="h-10 w-16 object-cover rounded-lg flex-shrink-0" />
           )}
           <div>
-            <p className="font-medium text-foreground text-sm">{item.name}</p>
+            <p className="font-medium text-foreground text-sm flex items-center gap-2 flex-wrap">
+              {item.name}
+              {item.is_available === false ? (
+                <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded">Not Available</span>
+              ) : (
+                <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Available</span>
+              )}
+            </p>
             <p className="text-xs text-muted-foreground">{item.type}{item.capacity ? ` · ${item.capacity}` : ''}{item.price ? ` · ${item.price}` : ''}</p>
           </div>
         </div>

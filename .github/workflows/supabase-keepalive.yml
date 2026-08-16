@@ -2,17 +2,50 @@ name: Supabase Keepalive
 
 on:
   schedule:
-    # Runs every 3 days at 6:00 UTC
-    - cron: '0 6 */3 * *'
-  workflow_dispatch:  # Allow manual trigger from GitHub UI
+    # Every 2 days at 06:00 UTC — safely within Supabase's 7-day inactivity pause window.
+    - cron: '0 6 */2 * *'
+  workflow_dispatch: {}   # Manual trigger from the Actions tab
+  push:
+    branches: [ main, master ]
+    # Note: GitHub disables scheduled workflows after 60 days of repository
+    # inactivity. Every push to the default branch (re)enables this workflow,
+    # so the schedule keeps running, and doubles as an extra keep-alive ping.
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Supabase database to prevent 7-day pause
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          curl -s -o /dev/null -w "%{http_code}" \
-            -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/site_settings?select=id&limit=1" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Missing SUPABASE_URL or SUPABASE_ANON_KEY secret. Add them in"
+            echo "Settings → Secrets and variables → Actions, then re-run this workflow."
+            exit 1
+          fi
+
+          code=""
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X GET "$SUPABASE_URL/rest/v1/site_settings?select=id&limit=1" \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+            echo "Attempt $i → HTTP $code"
+            case "$code" in
+              2*) echo "OK — Supabase responded with $code (project kept alive)."; exit 0 ;;
+              *) echo "Unexpected HTTP $code, retrying..." ; sleep 10 ;;
+            esac
+          done
+
+          echo "::error::Supabase keep-alive ping failed after 3 attempts (last HTTP $code)."
+          exit 1
