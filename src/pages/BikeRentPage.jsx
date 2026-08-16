@@ -24,24 +24,14 @@ function BikeRentContent() {
   const { data: bikes, isLoading } = useQuery({
     queryKey: ['bikes'],
     queryFn: async () => {
-      // Prefer filtering available bikes server-side (requires migration 007).
-      try {
-        const { data, error } = await supabase
-          .from('bikes')
-          .select('*')
-          .eq('is_available', true)
-          .order('sort_order', { ascending: true });
-        if (!error && data) return data;
-      } catch (e) {
-        console.warn('is_available filter failed, falling back to client-side filter:', e.message);
-      }
-      // Fallback: the is_available column may not exist yet — fetch all and filter now.
+      // Fetch ALL bikes (available + unavailable). Unavailable ones are shown
+      // clearly labelled "Not Available" with the rent action disabled.
       const { data, error } = await supabase
         .from('bikes')
         .select('*')
         .order('sort_order', { ascending: true });
       if (error) throw error;
-      return (data || []).filter((b) => b.is_available !== false);
+      return data || [];
     },
     initialData: [],
   });
@@ -129,6 +119,11 @@ function BikeRentContent() {
                         <img src={bike.image_url} alt={bike.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      {bike.is_available === false && (
+                        <span className="absolute top-3 left-3 z-10 text-xs font-semibold uppercase tracking-wide bg-red-600 text-white px-2.5 py-1 rounded-full">
+                          {lang === 'id' ? 'Tidak Tersedia' : 'Not Available'}
+                        </span>
+                      )}
                     </div>
                     <div className="p-6 flex flex-col flex-1">
                       <div className="flex items-center justify-between mb-2">
@@ -169,12 +164,18 @@ function BikeRentContent() {
                             <Info className="w-3.5 h-3.5" />
                             {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                           </Button>
-                          <a href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)} target="_blank" rel="noopener noreferrer" className="flex-1">
-                            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full group/btn">
-                              {ctaText}
-                              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
-                            </Button>
-                          </a>
+                          {bike.is_available === false ? (
+                            <div className="flex-1 rounded-full border border-border/50 py-2.5 text-center text-sm font-medium text-muted-foreground cursor-not-allowed">
+                              {lang === 'id' ? 'Tidak Tersedia' : 'Not Available'}
+                            </div>
+                          ) : (
+                            <a href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)} target="_blank" rel="noopener noreferrer" className="flex-1">
+                              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full group/btn">
+                                {ctaText}
+                                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
+                              </Button>
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
