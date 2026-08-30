@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CheckCircle, Users, AlertCircle, MessageCircle } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
-import { formatPrice } from '@/lib/utils';
+import { formatPriceRange } from '@/lib/utils';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 
@@ -36,7 +36,7 @@ export default function FleetDetailModal({ vehicle, open, onClose }) {
           {vehicle.price && (
             <div>
               <p className="text-2xl font-semibold text-foreground">
-                {formatPrice(vehicle.price)}
+                {formatPriceRange(vehicle.price, vehicle.price_max)}
                 <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
               </p>
               {vehicle.capacity && (

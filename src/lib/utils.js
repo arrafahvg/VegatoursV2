@@ -16,6 +16,18 @@ export function formatPrice(price) {
   return `Rp${n.toLocaleString('en-US')},-`;
 }
 
+// Format a price with an optional upper bound as a range,
+// e.g. "Rp420,000,- – Rp820,000,-". Falls back to a single price.
+export function formatPriceRange(price, priceMax) {
+  const min = formatPrice(price);
+  const hasMax = priceMax !== null && priceMax !== undefined && priceMax !== '';
+  const max = hasMax ? formatPrice(priceMax) : '';
+  if (min && max && min.startsWith('Rp') && max.startsWith('Rp') && min !== max) {
+    return `${min} – ${max}`;
+  }
+  return min;
+}
+
 export function generateId() {
   const bytes = new Uint8Array(12);
   crypto.getRandomValues(bytes);

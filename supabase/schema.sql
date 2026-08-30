@@ -143,6 +143,7 @@ CREATE TABLE public.faqs (
 CREATE TABLE public.fleet (
   features     JSONB,                       -- array of strings
   price        NUMERIC(12,2),               -- parsed from "IDR 600,000" during ETL
+  price_max    NUMERIC(12,2),               -- optional upper bound for price ranges
   image_url    TEXT,
   name         VARCHAR(255),
   terms_id     JSONB,                       -- array of strings
