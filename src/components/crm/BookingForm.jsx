@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save } from 'lucide-react';
+import { Save, MapPin } from 'lucide-react';
 
 const STATUSES = ['lead', 'confirmed', 'ongoing', 'completed', 'cancelled'];
 
@@ -34,6 +34,10 @@ export default function BookingForm({ booking, onSave, saving }) {
   });
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  const selectedPartner = partners.find(p => p.id === form.partner_id);
+  const partnerLocation = selectedPartner
+    ? [selectedPartner.address, selectedPartner.city].filter(Boolean).join(', ') : '';
 
   const handlePartnerSelect = (partnerId) => {
     const p = partners.find(p => p.id === partnerId);
@@ -105,12 +109,37 @@ export default function BookingForm({ booking, onSave, saving }) {
             <SelectItem value={null}>— Manual entry —</SelectItem>
             {partners.map(p => (
               <SelectItem key={p.id} value={p.id}>
-                {p.name}{p.pic_name ? ` (${p.pic_name})` : ''}
+                {p.name}{p.city ? ` — ${p.city}` : ''}{p.pic_name ? ` (${p.pic_name})` : ''}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
+      {selectedPartner && (
+        <div className="p-3 rounded-xl border border-border/60 bg-muted/40 text-sm space-y-1">
+          <p className="flex items-start gap-1.5">
+            <MapPin className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <span>
+              <span className="font-medium">Partner location:</span>{' '}
+              {partnerLocation || <span className="italic text-muted-foreground">not set</span>}
+              {selectedPartner.category ? <span className="text-muted-foreground"> · {selectedPartner.category}</span> : null}
+              {selectedPartner.maps_url && (
+                <>
+                  {' '}
+                  <a href={selectedPartner.maps_url} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                    View on Maps
+                  </a>
+                </>
+              )}
+            </span>
+          </p>
+          <p className="text-muted-foreground">
+            <span className="font-medium text-foreground">Client location:</span>{' '}
+            {form.customer_country || <span className="italic">not filled in yet</span>}
+            {' — '}compare with the partner area above to confirm a good match.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {field('Partner / Agency Name', 'partner_name')}
         {field('PIC Name', 'pic_name')}

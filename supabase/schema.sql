@@ -203,6 +203,12 @@ CREATE TABLE public.partners (
   sort_order         INTEGER,
   email              VARCHAR(255),
   pic_name           VARCHAR(255),
+  category           VARCHAR(50),
+  address            TEXT,
+  city               VARCHAR(100),
+  maps_url           TEXT,
+  rating             NUMERIC(2,1),
+  reviews_count      INTEGER,
   -- Base44 metadata
   id            VARCHAR(24)  PRIMARY KEY,
   created_date  TIMESTAMPTZ  NOT NULL DEFAULT now(),
