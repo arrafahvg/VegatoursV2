@@ -1,6 +1,6 @@
 import React from 'react';
 import EntityManager from '@/components/admin/EntityManager';
-import { formatPriceRange } from '@/lib/utils';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 
 const fields = [
   { key: 'name', label: 'Vehicle Name', type: 'text', placeholder: 'e.g. HIACE PREMIO (12 seater)' },
@@ -8,6 +8,7 @@ const fields = [
   { key: 'capacity', label: 'Capacity (Passengers)', type: 'number' },
   { key: 'price', label: 'Price From (numbers only, e.g. 1500000 = Rp1,500,000,-)', type: 'number', placeholder: 'e.g. 420000' },
   { key: 'price_max', label: 'Price To — optional, for ranges (e.g. 820000 = Rp820,000,-)', type: 'number', placeholder: 'e.g. 820000' },
+  { key: 'price_discount', label: 'Discounted Price (optional, single prices only)', type: 'number', placeholder: 'e.g. 1200000' },
   { key: 'includes_en', label: 'Included (English)', type: 'array' },
   { key: 'includes_id', label: 'Termasuk (Bahasa Indonesia)', type: 'array' },
   { key: 'terms_en', label: 'Terms & Conditions (English)', type: 'array' },
@@ -31,7 +32,19 @@ export default function AdminFleet() {
           )}
           <div>
             <p className="font-medium text-foreground text-sm">{item.name}</p>
-            <p className="text-xs text-muted-foreground">{item.type}{item.capacity ? ` · ${item.capacity} pax` : ''}{item.price ? ` · ${formatPriceRange(item.price, item.price_max)}` : ''}</p>
+            <p className="text-xs text-muted-foreground">{item.type}{item.capacity ? ` · ${item.capacity} pax` : ''}</p>
+            {item.price ? (
+              item.price_max ? (
+                <p className="text-xs text-muted-foreground">{formatPriceRange(item.price, item.price_max)}</p>
+              ) : item.price_discount ? (
+                <p className="text-xs">
+                  <span className="line-through text-muted-foreground mr-1">{formatPrice(item.price)}</span>
+                  <span className="font-semibold text-primary">{formatPrice(item.price_discount)}</span>
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{formatPrice(item.price)}</p>
+              )
+            ) : null}
           </div>
         </div>
       )}

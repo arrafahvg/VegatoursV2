@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
-import { formatPriceRange } from '@/lib/utils';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 import { Clock, MapPin, Star, ArrowRight, Users, CheckCircle, Info, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -235,10 +235,25 @@ function PackagesContent() {
                     </div>
                     <h3 className="font-serif text-lg font-medium text-foreground mb-2">{v.name}</h3>
                     {v.price && (
-                      <p className="text-base font-semibold text-foreground mb-3">
-                        {formatPriceRange(v.price, v.price_max)}
-                        <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                      </p>
+                      <div className="mb-3">
+                        {v.price_max ? (
+                          <p className="text-base font-semibold text-foreground">
+                            {formatPriceRange(v.price, v.price_max)}
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        ) : v.price_discount ? (
+                          <p className="text-base font-semibold text-foreground">
+                            <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(v.price)}</span>
+                            <span className="text-primary">{formatPrice(v.price_discount)}</span>
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        ) : (
+                          <p className="text-base font-semibold text-foreground">
+                            {formatPrice(v.price)}
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        )}
+                      </div>
                     )}
                     {v.features?.length > 0 && (
                       <div className="space-y-1 mb-3">

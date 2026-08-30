@@ -28,6 +28,19 @@ export function formatPriceRange(price, priceMax) {
   return min;
 }
 
+// Whether a fleet item should show a discounted price with the original struck
+// through. Only applies when there's a single price (no range) and the discount
+// is a valid, lower numeric value.
+export function hasPriceDiscount(price, priceDiscount, priceMax) {
+  const hasMax = priceMax !== null && priceMax !== undefined && priceMax !== '';
+  if (hasMax) return false;
+  const p = Number(price);
+  const d = Number(priceDiscount);
+  if (Number.isNaN(p) || priceDiscount === null || priceDiscount === undefined || priceDiscount === '') return false;
+  if (Number.isNaN(d)) return false;
+  return d < p;
+}
+
 export function generateId() {
   const bytes = new Uint8Array(12);
   crypto.getRandomValues(bytes);

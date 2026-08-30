@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CheckCircle, Users, AlertCircle, MessageCircle } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
-import { formatPriceRange } from '@/lib/utils';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 
@@ -35,10 +35,23 @@ export default function FleetDetailModal({ vehicle, open, onClose }) {
           {/* Price */}
           {vehicle.price && (
             <div>
-              <p className="text-2xl font-semibold text-foreground">
-                {formatPriceRange(vehicle.price, vehicle.price_max)}
-                <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-              </p>
+              {vehicle.price_max ? (
+                <p className="text-2xl font-semibold text-foreground">
+                  {formatPriceRange(vehicle.price, vehicle.price_max)}
+                  <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                </p>
+              ) : vehicle.price_discount ? (
+                <p className="text-2xl font-semibold text-foreground">
+                  <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(vehicle.price)}</span>
+                  <span className="text-primary">{formatPrice(vehicle.price_discount)}</span>
+                  <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                </p>
+              ) : (
+                <p className="text-2xl font-semibold text-foreground">
+                  {formatPrice(vehicle.price)}
+                  <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                </p>
+              )}
               {vehicle.capacity && (
                 <p className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                   <Users className="w-3.5 h-3.5" /> {vehicle.capacity} {isId ? 'penumpang' : 'pax'}
