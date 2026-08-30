@@ -8,7 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Pencil, Trash2, GripVertical } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Pencil, Trash2, GripVertical, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 function toSnakeCase(str) {
@@ -17,10 +18,12 @@ function toSnakeCase(str) {
     .replace(/^_/, '');
 }
 
-export default function EntityManager({ entityName, queryKey, fields, renderCard, tableName, missingFieldWarning }) {
+export default function EntityManager({ entityName, queryKey, fields, renderCard, tableName, missingFieldWarning, searchKeys, filters }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [formData, setFormData] = useState({});
+  const [search, setSearch] = useState('');
+  const [filterValues, setFilterValues] = useState({});
   const queryClient = useQueryClient();
 
   const table = tableName || toSnakeCase(entityName);
@@ -33,6 +36,23 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
       return data || [];
     },
     initialData: [],
+  });
+
+  const hasSearch = Array.isArray(searchKeys) && searchKeys.length > 0;
+  const filterDefs = Array.isArray(filters) ? filters : [];
+  const hasToolbar = hasSearch || filterDefs.length > 0;
+
+  const filteredItems = items.filter(item => {
+    if (hasSearch && search) {
+      const q = search.toLowerCase();
+      const hit = searchKeys.some(key => String(item[key] ?? '').toLowerCase().includes(q));
+      if (!hit) return false;
+    }
+    return filterDefs.every(f => {
+      const value = filterValues[f.key] ?? 'all';
+      if (value === 'all') return true;
+      return f.match ? f.match(item, value) : String(item[f.key] ?? '') === value;
+    });
   });
 
   const createMutation = useMutation({
@@ -136,6 +156,42 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
         </Button>
       </div>
 
+      {hasToolbar && (
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          {hasSearch && (
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={`Search ${entityName.toLowerCase()}s...`}
+                className="pl-9 rounded-xl"
+              />
+            </div>
+          )}
+          {filterDefs.map(f => {
+            const options = typeof f.options === 'function' ? f.options(items) : f.options;
+            return (
+              <Select
+                key={f.key}
+                value={filterValues[f.key] ?? 'all'}
+                onValueChange={v => setFilterValues(prev => ({ ...prev, [f.key]: v }))}
+              >
+                <SelectTrigger className="rounded-xl w-auto min-w-[140px]">
+                  <SelectValue placeholder={f.label} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{f.allLabel || `All ${f.label}`}</SelectItem>
+                  {options.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            );
+          })}
+        </div>
+      )}
+
       {missingColumns.length > 0 && (
         <div className="mb-6 p-4 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-800 text-sm leading-relaxed">
           <p className="font-semibold mb-1">
@@ -154,16 +210,22 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
 
       {isLoading ? (
         <div className="text-center py-12 text-muted-foreground">Loading...</div>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
+        items.length > 0 ? (
+          <div className="text-center py-12 border-2 border-dashed border-border rounded-2xl">
+            <p className="text-muted-foreground">No items match your search or filters</p>
+          </div>
+        ) : (
         <div className="text-center py-12 border-2 border-dashed border-border rounded-2xl">
           <p className="text-muted-foreground mb-4">No items yet</p>
           <Button onClick={openCreate} variant="outline" className="rounded-xl gap-2">
             <Plus className="w-4 h-4" /> Add First Item
           </Button>
         </div>
+        )
       ) : (
         <div className="space-y-3">
-          {items.map(item => (
+          {filteredItems.map(item => (
             <div key={item.id} className="flex items-center gap-3 p-4 bg-card border border-border/50 rounded-xl">
               <GripVertical className="w-4 h-4 text-muted-foreground/50 flex-shrink-0 hidden sm:block" />
               <div className="flex-1 min-w-0">

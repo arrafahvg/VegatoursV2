@@ -93,6 +93,35 @@ export default function AdminPartners() {
         queryKey="partners"
         tableName="partners"
         fields={fields}
+        searchKeys={['name', 'city', 'address', 'category', 'pic_name', 'pic_phone', 'email', 'description']}
+        filters={[
+          {
+            key: 'category',
+            label: 'Category',
+            allLabel: 'All Categories',
+            options: (items) => {
+              const cats = [...new Set(items.map(i => i.category).filter(Boolean))];
+              return cats.map(c => ({ value: c, label: c }));
+            },
+            match: (item, value) => item.category === value,
+          },
+          {
+            key: 'status',
+            label: 'Status',
+            allLabel: 'All Statuses',
+            options: [
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
+              { value: 'on_website', label: 'On Website' },
+            ],
+            match: (item, value) => {
+              if (value === 'active') return !!item.is_active;
+              if (value === 'inactive') return !item.is_active;
+              if (value === 'on_website') return !!item.publish_on_website;
+              return true;
+            },
+          },
+        ]}
         renderCard={(item) => (
           <div className="flex items-start gap-3">
             {item.logo_url && (
