@@ -9,6 +9,7 @@ import { Clock, MapPin, Star, ArrowRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import PriceDisplay from '@/components/PriceDisplay';
+import ImageViewer from '@/components/ImageViewer';
 import { Skeleton } from '@/components/ui/skeleton';
 import PackageDetailModal from './PackageDetailModal';
 
@@ -73,9 +74,13 @@ export default function Packages() {
                 >
                   <div className="relative h-56 overflow-hidden">
                     {pkg.image_url && (
-                      <img src={pkg.image_url} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <ImageViewer
+                        src={pkg.image_url}
+                        alt={title}
+                        imgClassName="transition-transform duration-700 group-hover:scale-105"
+                      />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
                     {pkg.is_popular && (
                       <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground border-0 rounded-full px-3 py-1">
                         <Star className="w-3 h-3 mr-1" /> {t('packages.popular')}
@@ -114,11 +119,11 @@ export default function Packages() {
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          size="sm"
+                          size="default"
                           onClick={() => setSelectedPkg(pkg)}
-                          className="rounded-full gap-1.5 flex-shrink-0"
+                          className="rounded-full gap-1.5 font-medium border-primary text-primary hover:bg-primary hover:text-primary-foreground flex-shrink-0"
                         >
-                          <Info className="w-3.5 h-3.5" />
+                          <Info className="w-4 h-4" />
                           {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                         </Button>
                         <a
