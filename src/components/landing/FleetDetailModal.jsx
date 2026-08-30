@@ -1,13 +1,21 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CheckCircle, Users, AlertCircle } from 'lucide-react';
+import { CheckCircle, Users, AlertCircle, MessageCircle } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
+import { formatPrice } from '@/lib/utils';
+import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
 
 export default function FleetDetailModal({ vehicle, open, onClose }) {
   const { lang } = useLang();
   if (!vehicle) return null;
 
   const isId = lang === 'id';
+  const bookUrl = WHATSAPP_MESSAGE_URL(
+    isId
+      ? `Halo, saya ingin memesan armada ${vehicle.name}. Apakah tersedia?`
+      : `Hello, I'd like to book the ${vehicle.name}. Is it available?`
+  );
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -28,7 +36,7 @@ export default function FleetDetailModal({ vehicle, open, onClose }) {
           {vehicle.price && (
             <div>
               <p className="text-2xl font-semibold text-foreground">
-                {vehicle.price}
+                {formatPrice(vehicle.price)}
                 <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
               </p>
               {vehicle.capacity && (
@@ -38,6 +46,14 @@ export default function FleetDetailModal({ vehicle, open, onClose }) {
               )}
             </div>
           )}
+
+          {/* Book via WhatsApp */}
+          <a href={bookUrl} target="_blank" rel="noopener noreferrer" className="block">
+            <Button className="w-full rounded-full gap-2 bg-green-600 hover:bg-green-700 text-white">
+              <MessageCircle className="w-4 h-4" />
+              {isId ? 'Pesan Armada Ini' : 'Book This Fleet'}
+            </Button>
+          </a>
 
           {/* Includes */}
           {(() => {

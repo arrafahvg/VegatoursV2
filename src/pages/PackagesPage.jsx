@@ -5,7 +5,8 @@ import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
-import { Clock, MapPin, Star, ArrowRight, Users, CheckCircle, Info } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
+import { Clock, MapPin, Star, ArrowRight, Users, CheckCircle, Info, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -235,7 +236,7 @@ function PackagesContent() {
                     <h3 className="font-serif text-lg font-medium text-foreground mb-2">{v.name}</h3>
                     {v.price && (
                       <p className="text-base font-semibold text-foreground mb-3">
-                        {v.price}
+                        {formatPrice(v.price)}
                         <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
                       </p>
                     )}
@@ -249,7 +250,7 @@ function PackagesContent() {
                         {v.features.length > 2 && <p className="text-xs text-muted-foreground pl-5">+{v.features.length - 2} more...</p>}
                       </div>
                     )}
-                    <div className="mt-auto pt-3 border-t border-border/50">
+                    <div className="mt-auto pt-3 border-t border-border/50 space-y-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -259,6 +260,23 @@ function PackagesContent() {
                         <Info className="w-3.5 h-3.5" />
                         {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                       </Button>
+                      <a
+                        href={WHATSAPP_MESSAGE_URL(
+                          lang === 'id'
+                            ? `Halo, saya ingin memesan armada ${v.name}. Apakah tersedia?`
+                            : `Hello, I'd like to book the ${v.name}. Is it available?`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          size="sm"
+                          className="rounded-full gap-1.5 w-full bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          {lang === 'id' ? 'Pesan Armada Ini' : 'Book This Fleet'}
+                        </Button>
+                      </a>
                     </div>
                   </div>
                 </motion.div>

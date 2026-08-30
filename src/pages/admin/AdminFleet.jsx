@@ -5,7 +5,7 @@ const fields = [
   { key: 'name', label: 'Vehicle Name', type: 'text', placeholder: 'e.g. HIACE PREMIO (12 seater)' },
   { key: 'type', label: 'Vehicle Type', type: 'text', placeholder: 'e.g. MPV, SUV, Minibus' },
   { key: 'capacity', label: 'Capacity (Passengers)', type: 'number' },
-  { key: 'price', label: 'Price', type: 'text', placeholder: 'e.g. IDR 1,400,000' },
+  { key: 'price', label: 'Price (numbers only, e.g. 1500000 = Rp1,500,000,-)', type: 'number', placeholder: 'e.g. 1500000' },
   { key: 'includes_en', label: 'Included (English)', type: 'array' },
   { key: 'includes_id', label: 'Termasuk (Bahasa Indonesia)', type: 'array' },
   { key: 'terms_en', label: 'Terms & Conditions (English)', type: 'array' },

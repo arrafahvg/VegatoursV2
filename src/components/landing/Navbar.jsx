@@ -70,6 +70,12 @@ export default function Navbar({ solid = false }) {
                       {t('nav.packages')}
                     </Link>
                     <Link
+                      to="/packages#fleet"
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground/80 hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      {t('nav.carRent')}
+                    </Link>
+                    <Link
                       to="/bike-rent"
                       className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-foreground/80 hover:text-primary hover:bg-secondary/50 transition-colors"
                     >
@@ -143,6 +149,13 @@ export default function Navbar({ solid = false }) {
                     className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors text-center"
                   >
                     {t('nav.packages')}
+                  </Link>
+                  <Link
+                    to="/packages#fleet"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors text-center"
+                  >
+                    {t('nav.carRent')}
                   </Link>
                   <Link
                     to="/bike-rent"

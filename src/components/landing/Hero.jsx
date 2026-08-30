@@ -3,7 +3,7 @@ import { useLang } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { WHATSAPP_URL } from '@/lib/constants';
-import { ArrowRight, Star, MapPin, Users } from 'lucide-react';
+import { ArrowRight, Star, MapPin, Users, Car, Bike } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HERO_IMG = '/images/hero.jpg';
@@ -57,6 +57,27 @@ export default function Hero() {
                 {t('hero.cta2')}
               </Button>
             </a>
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <Link to="/packages#fleet">
+              <Button
+                variant="ghost"
+                className="rounded-full px-6 py-4 text-sm border border-white/20 text-white/80 hover:bg-white/10 hover:text-white font-medium tracking-wide"
+              >
+                {t('hero.cta3')}
+                <Car className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+            <Link to="/bike-rent">
+              <Button
+                variant="ghost"
+                className="rounded-full px-6 py-4 text-sm border border-white/20 text-white/80 hover:bg-white/10 hover:text-white font-medium tracking-wide"
+              >
+                {t('hero.cta4')}
+                <Bike className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
           </div>
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
