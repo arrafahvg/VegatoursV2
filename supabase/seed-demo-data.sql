@@ -138,10 +138,10 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 -- 13. TESTIMONIALS (add 2 more — currently has 6)
 -- ============================================================================
-INSERT INTO public.testimonials (author_name, rating, quote, author_location, author_photo, sort_order, id, created_date, updated_date, created_by_id, created_by, is_sample)
+INSERT INTO public.testimonials (author_name, rating, quote_en, quote_id, author_location, author_photo, sort_order, id, created_date, updated_date, created_by_id, created_by, is_sample)
 VALUES
-('Sophie Martin','5','We rented a scooter for a week and it was perfect! The bike was in great condition and delivery was on time. Highly recommend!','France','','7','6a60000d0000000000000001','2026-07-19T00:00:00.000000','2026-07-19T00:00:00.000000','6a0947b7b4a68dcdea755505','arrafahvega@gmail.com','true'),
-('Hiroshi Tanaka','5','Our family of 5 had an amazing Kintamani tour. The driver was very knowledgeable and patient with our children. Thank you Vegatours!','Japan','','8','6a60000d0000000000000002','2026-07-19T00:00:00.000000','2026-07-19T00:00:00.000000','6a0947b7b4a68dcdea755505','arrafahvega@gmail.com','true')
+('Sophie Martin','5','We rented a scooter for a week and it was perfect! The bike was in great condition and delivery was on time. Highly recommend!','Kami menyewa skuter selama seminggu dan semuanya sempurna! Motor dalam kondisi bagus dan pengiriman tepat waktu. Sangat direkomendasikan!','France','','7','6a60000d0000000000000001','2026-07-19T00:00:00.000000','2026-07-19T00:00:00.000000','6a0947b7b4a68dcdea755505','arrafahvega@gmail.com','true'),
+('Hiroshi Tanaka','5','Our family of 5 had an amazing Kintamani tour. The driver was very knowledgeable and patient with our children. Thank you Vegatours!','Keluarga kami yang berjumlah 5 orang menikmati tur Kintamani yang luar biasa. Sopirnya sangat berpengetahuan dan sabar dengan anak-anak kami. Terima kasih Vegatours!','Japan','','8','6a60000d0000000000000002','2026-07-19T00:00:00.000000','2026-07-19T00:00:00.000000','6a0947b7b4a68dcdea755505','arrafahvega@gmail.com','true')
 ON CONFLICT (id) DO NOTHING;
 
 

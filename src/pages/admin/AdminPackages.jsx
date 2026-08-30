@@ -24,7 +24,8 @@ export default function AdminPackages() {
   return (
     <EntityManager
       entityName="TourPackage"
-      queryKey="tourPackages"
+      queryKey="tour_packages"
+      tableName="tour_packages"
       fields={fields}
       renderCard={(item) => (
         <div className="flex items-center gap-3">

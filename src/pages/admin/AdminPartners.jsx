@@ -20,6 +20,7 @@ export default function AdminPartners() {
     <EntityManager
       entityName="Partner"
       queryKey="partners"
+      tableName="partners"
       fields={fields}
       renderCard={(item) => (
         <div className="flex items-center gap-3">

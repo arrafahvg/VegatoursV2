@@ -14,6 +14,7 @@ export default function AdminFAQ() {
     <EntityManager
       entityName="FAQ"
       queryKey="faqs"
+      tableName="faqs"
       fields={fields}
       renderCard={(item) => (
         <div>

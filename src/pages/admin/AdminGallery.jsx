@@ -12,7 +12,8 @@ export default function AdminGallery() {
   return (
     <EntityManager
       entityName="GalleryImage"
-      queryKey="galleryImages"
+      queryKey="gallery_images"
+      tableName="gallery_images"
       fields={fields}
       renderCard={(item) => (
         <div className="flex items-center gap-3">

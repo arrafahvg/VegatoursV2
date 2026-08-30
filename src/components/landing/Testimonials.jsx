@@ -8,7 +8,7 @@ import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Testimonials() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { data: testimonials } = useQuery({
     queryKey: ['testimonials'],
     queryFn: async () => {
@@ -59,9 +59,16 @@ export default function Testimonials() {
               className="text-center"
             >
               <Quote className="w-10 h-10 text-primary/30 mx-auto mb-6" />
-              <blockquote className="font-serif text-xl sm:text-2xl lg:text-3xl font-light text-foreground leading-relaxed italic mb-8">
-                "{testimonials[current].quote}"
-              </blockquote>
+              {(() => {
+                const quote = lang === 'id' && testimonials[current].quote_id
+                  ? testimonials[current].quote_id
+                  : (testimonials[current].quote_en || testimonials[current].quote);
+                return (
+                  <blockquote className="font-serif text-xl sm:text-2xl lg:text-3xl font-light text-foreground leading-relaxed italic mb-8">
+                    "{quote}"
+                  </blockquote>
+                );
+              })()}
               <div className="flex items-center justify-center gap-2 mb-2">
                 {Array.from({ length: testimonials[current].rating || 5 }).map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-primary text-primary" />

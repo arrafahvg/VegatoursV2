@@ -246,6 +246,8 @@ CREATE TABLE public.testimonials (
   author_name     VARCHAR(255),
   rating          SMALLINT CHECK (rating >= 1 AND rating <= 5),
   quote           TEXT,
+  quote_en        TEXT,
+  quote_id        TEXT,
   author_location VARCHAR(100),
   author_photo    TEXT,
   sort_order      INTEGER,

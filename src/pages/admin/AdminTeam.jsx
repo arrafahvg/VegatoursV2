@@ -15,7 +15,8 @@ export default function AdminTeam() {
   return (
     <EntityManager
       entityName="TeamMember"
-      queryKey="teamMembers"
+      queryKey="team_members"
+      tableName="team_members"
       fields={fields}
       renderCard={(item) => (
         <div className="flex items-center gap-3">
