@@ -15,6 +15,7 @@ import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import PackageDetailModal from '@/components/landing/PackageDetailModal';
 import FleetDetailModal from '@/components/landing/FleetDetailModal';
+import PriceDisplay from '@/components/PriceDisplay';
 
 function PackagesContent() {
   const { t, lang } = useLang();
@@ -153,10 +154,7 @@ function PackagesContent() {
                       )}
                       <div className="pt-4 border-t border-border/50 mt-auto">
                         <p className="text-xs text-muted-foreground mb-1">{t('packages.startingFrom')}</p>
-                        <p className="text-lg font-semibold text-foreground mb-4">
-                          {pkg.price}
-                          <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                        </p>
+                        <PriceDisplay price={pkg.price} priceMax={pkg.price_max} priceDiscount={pkg.price_discount} className="text-lg mb-4" />
                         <div className="flex gap-2">
                           <Button
                             variant="outline"

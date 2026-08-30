@@ -28,7 +28,7 @@ export function formatPriceRange(price, priceMax) {
   return min;
 }
 
-// Whether a fleet item should show a discounted price with the original struck
+// Whether a price item should show a discounted price with the original struck
 // through. Only applies when there's a single price (no range) and the discount
 // is a valid, lower numeric value.
 export function hasPriceDiscount(price, priceDiscount, priceMax) {

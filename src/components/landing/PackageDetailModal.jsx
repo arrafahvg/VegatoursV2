@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, MapPin, Star, ArrowRight, AlertCircle } from 'lucide-react';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 import { useLang } from '@/lib/i18n';
+import PriceDisplay from '@/components/PriceDisplay';
 
 export default function PackageDetailModal({ pkg, open, onClose }) {
   const { t, lang } = useLang();
@@ -40,10 +41,7 @@ export default function PackageDetailModal({ pkg, open, onClose }) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs text-muted-foreground mb-0.5">{t('packages.startingFrom')}</p>
-              <p className="text-2xl font-semibold text-foreground">
-                {pkg.price}
-                <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-              </p>
+              <PriceDisplay price={pkg.price} priceMax={pkg.price_max} priceDiscount={pkg.price_discount} className="text-2xl" />
             </div>
             {duration && (
               <span className="flex items-center gap-1 text-sm text-muted-foreground mt-5">

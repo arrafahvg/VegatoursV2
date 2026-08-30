@@ -2,11 +2,14 @@ import React from 'react';
 import EntityManager from '@/components/admin/EntityManager';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
+import PriceDisplay from '@/components/PriceDisplay';
 
 const fields = [
   { key: 'title_en', label: 'Title (English)', type: 'text', placeholder: 'e.g. Ubud Highlight Tour' },
   { key: 'title_id', label: 'Title (Bahasa Indonesia)', type: 'text', placeholder: 'e.g. Tur Highlight Ubud' },
-  { key: 'price', label: 'Price Display', type: 'text', placeholder: 'e.g. IDR 850,000 / car' },
+  { key: 'price', label: 'Price From (numbers only, e.g. 850000 = Rp850,000,-)', type: 'number', placeholder: 'e.g. 850000' },
+  { key: 'price_max', label: 'Price Max — optional. Enter to show a RANGE (e.g. 1200000 => Rp850,000,- – Rp1,200,000,-). Discount is ignored when a range is set.', type: 'number', placeholder: 'e.g. 1200000' },
+  { key: 'price_discount', label: 'Discounted Price — optional. Enter for a single price with the original struck through (e.g. 700000). Only for single prices, not ranges.', type: 'number', placeholder: 'e.g. 700000', hidden: (fd) => !!fd.price_max },
   { key: 'duration_en', label: 'Duration (English)', type: 'text', placeholder: 'e.g. Full Day (10 Hours)' },
   { key: 'duration_id', label: 'Duration (Bahasa Indonesia)', type: 'text', placeholder: 'e.g. Sehari Penuh (10 Jam)' },
   { key: 'description_en', label: 'Description (English)', type: 'textarea' },
@@ -35,7 +38,7 @@ export default function AdminPackages() {
               <p className="font-medium text-foreground truncate">{item.title_en}</p>
               {item.is_popular && <Badge className="bg-primary/10 text-primary border-0 text-xs"><Star className="w-3 h-3 mr-1" />Popular</Badge>}
             </div>
-            <p className="text-sm text-muted-foreground">{item.price}</p>
+            {item.price ? <PriceDisplay price={item.price} priceMax={item.price_max} priceDiscount={item.price_discount} className="text-sm" /> : null}
           </div>
         </div>
       )}

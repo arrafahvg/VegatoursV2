@@ -280,6 +280,8 @@ CREATE TABLE public.tour_packages (
   description_id TEXT,
   is_popular     BOOLEAN,
   price          NUMERIC(12,2),              -- parsed from "IDR 950,000 / car" during ETL
+  price_max      NUMERIC(12,2),              -- optional upper bound for price ranges
+  price_discount NUMERIC(12,2),              -- optional discounted price (strikethrough original)
   title_en       VARCHAR(255),
   currency       VARCHAR(3),
   sort_order     INTEGER,

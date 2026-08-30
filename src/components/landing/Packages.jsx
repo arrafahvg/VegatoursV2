@@ -8,6 +8,7 @@ import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 import { Clock, MapPin, Star, ArrowRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import PriceDisplay from '@/components/PriceDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
 import PackageDetailModal from './PackageDetailModal';
 
@@ -109,10 +110,7 @@ export default function Packages() {
 
                     <div className="pt-4 border-t border-border/50 mt-auto">
                       <p className="text-xs text-muted-foreground mb-1">{t('packages.startingFrom')}</p>
-                      <p className="text-lg font-semibold text-foreground mb-4">
-                        {pkg.price}
-                        <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                      </p>
+                      <PriceDisplay price={pkg.price} priceMax={pkg.price_max} priceDiscount={pkg.price_discount} className="text-lg mb-4" />
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
