@@ -9,8 +9,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Pencil, Trash2, GripVertical, Search } from 'lucide-react';
+import { Plus, Pencil, Trash2, GripVertical, Search, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { generateId } from '@/lib/utils';
 
 function toSnakeCase(str) {
   return str
@@ -57,7 +58,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
-      const { error } = await supabase.from(table).insert(data);
+      // Every table uses a VARCHAR(24) primary key with no default — generate one,
+      // otherwise the insert fails with a NOT NULL violation (same bug as bookings).
+      const { error } = await supabase.from(table).insert({ id: generateId(), ...data });
       if (error) throw error;
     },
     onError: (err) => {
@@ -146,6 +149,8 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
   // because then saving the toggle would silently fail. Show a helpful banner.
   const missingColumns = (missingFieldWarning || [])
     .filter(key => items.length > 0 && items.every(item => !(key in item)));
+
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   return (
     <div>
@@ -335,9 +340,10 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
               </div>
             ))}
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-              <Button variant="outline" onClick={closeDialog} className="rounded-xl h-11">Cancel</Button>
-              <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11">
-                {editing ? 'Update' : 'Create'}
+              <Button variant="outline" onClick={closeDialog} disabled={saving} className="rounded-xl h-11">Cancel</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 gap-2">
+                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                {saving ? 'Saving...' : (editing ? 'Update' : 'Create')}
               </Button>
             </div>
           </div>
