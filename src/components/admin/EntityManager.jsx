@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, Pencil, Trash2, GripVertical, Search, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { generateId } from '@/lib/utils';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 function toSnakeCase(str) {
   return str
@@ -272,6 +273,13 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
                     onChange={(e) => updateField(field.key, e.target.value)}
                     placeholder={field.placeholder}
                     className="rounded-xl"
+                  />
+                )}
+                {field.type === 'richtext' && (
+                  <RichTextEditor
+                    value={formData[field.key] || ''}
+                    onChange={(v) => updateField(field.key, v)}
+                    placeholder={field.placeholder}
                   />
                 )}
                 {field.type === 'number' && (

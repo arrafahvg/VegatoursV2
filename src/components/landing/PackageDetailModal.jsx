@@ -6,6 +6,7 @@ import { Clock, MapPin, Star, ArrowRight, AlertCircle } from 'lucide-react';
 import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 import { useLang } from '@/lib/i18n';
 import PriceDisplay from '@/components/PriceDisplay';
+import MarkdownView from '@/components/MarkdownView';
 
 export default function PackageDetailModal({ pkg, open, onClose }) {
   const { t, lang } = useLang();
@@ -52,7 +53,7 @@ export default function PackageDetailModal({ pkg, open, onClose }) {
 
           {/* Description */}
           {description && (
-            <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+            <MarkdownView>{description}</MarkdownView>
           )}
 
           {/* Highlights */}
