@@ -255,7 +255,7 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
             <DialogTitle>{editing ? 'Edit' : 'Add'} {entityName.replace(/([A-Z])/g, ' $1').trim()}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-4">
-            {fields.map(field => (
+            {fields.filter(f => !(f.hidden && f.hidden(formData))).map(field => (
               <div key={field.key}>
                 <Label className="text-sm font-medium mb-1.5 block">{field.label}</Label>
                 {field.type === 'text' && (
