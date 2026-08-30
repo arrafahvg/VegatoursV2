@@ -130,7 +130,7 @@ export default function BookingForm({ booking, onSave, saving }) {
       </div>
 
       <div className="flex justify-end pt-4">
-        <Button type="submit" disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2 px-8">
+        <Button type="submit" disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2 px-8 h-11 w-full sm:w-auto">
           <Save className="w-4 h-4" /> {saving ? 'Saving...' : 'Save Booking'}
         </Button>
       </div>

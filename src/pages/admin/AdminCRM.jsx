@@ -70,19 +70,19 @@ export default function AdminCRM() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">CRM</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold text-foreground">CRM</h1>
           <p className="text-muted-foreground mt-1">Manage bookings, customers, itineraries & invoices</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {view !== 'list' && (
-            <Button variant="outline" className="rounded-xl" onClick={() => { setView('list'); setSelected(null); }}>
+            <Button variant="outline" className="rounded-xl h-11" onClick={() => { setView('list'); setSelected(null); }}>
               ← Back to List
             </Button>
           )}
           {view === 'list' && (
-            <Button onClick={handleNew} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2">
+            <Button onClick={handleNew} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2 h-11">
               <Plus className="w-4 h-4" /> New Booking
             </Button>
           )}

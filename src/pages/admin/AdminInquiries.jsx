@@ -42,9 +42,9 @@ export default function AdminInquiries() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center gap-3">
+      <div className="mb-6 sm:mb-8 flex items-center gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Inquiries</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold text-foreground">Inquiries</h1>
           <p className="text-muted-foreground mt-1">Messages submitted via the contact form</p>
         </div>
         {newCount > 0 && (
@@ -82,7 +82,7 @@ export default function AdminInquiries() {
                     {inq.status}
                   </span>
                   <Select value={inq.status} onValueChange={(val) => updateMutation.mutate({ id: inq.id, status: val })}>
-                    <SelectTrigger className="w-36 h-8 rounded-xl text-xs">
+                    <SelectTrigger className="w-36 h-10 rounded-xl text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

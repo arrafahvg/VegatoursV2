@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Package, MessageSquare, Users, Image, HelpCircle, LayoutDashboard,
   ArrowLeft, Settings, Inbox, Building2, Car, Briefcase, CreditCard,
-  MapPin, ChevronDown, Globe, LogOut, Shield, Bike
+  MapPin, ChevronDown, Globe, LogOut, Shield, Bike, X
 } from 'lucide-react';
 import { LOGO_URL } from '@/lib/constants';
 import { useAuth } from '@/lib/AuthContext';
@@ -55,6 +55,11 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
     menuGroups.reduce((acc, g) => ({ ...acc, [g.label]: true }), {})
   );
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname, setMobileOpen]);
+
   const toggleGroup = (label) => setOpenGroups(prev => ({ ...prev, [label]: !prev[label] }));
 
   const renderLink = (item) => {
@@ -63,38 +68,46 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
       <Link
         key={item.path}
         to={item.path}
-        onClick={() => setMobileOpen?.(false)}
-        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
           isActive
             ? 'bg-primary/10 text-primary'
             : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
         }`}
       >
-        <item.icon className="w-4 h-4 flex-shrink-0" />
-        {item.label}
+        <item.icon className="w-5 h-5 flex-shrink-0" />
+        <span className="flex-1">{item.label}</span>
       </Link>
     );
   };
 
   const content = (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="p-6 border-b border-border/50">
-        <img
-          src={LOGO_URL}
-          alt="Vegatours"
-          className="h-14 w-auto object-contain rounded-lg"
-        />
-        <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
-          <Globe className="w-3 h-3" /> Admin Dashboard
-        </p>
+      <div className="p-4 sm:p-6 border-b border-border/50 flex items-center justify-between">
+        <div className="min-w-0">
+          <img
+            src={LOGO_URL}
+            alt="Vegatours"
+            className="h-10 sm:h-12 w-auto object-contain rounded-lg"
+          />
+          <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+            <Globe className="w-3 h-3" /> Admin Dashboard
+          </p>
+        </div>
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="lg:hidden p-2 -mr-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+          aria-label="Close menu"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
-      <nav className="flex-1 p-3 overflow-y-auto">
+      <nav className="flex-1 p-2 sm:p-3 overflow-y-auto overscroll-contain">
         {menuGroups.map(group => (
           <div key={group.label} className="mb-1">
             <button
               onClick={() => toggleGroup(group.label)}
-              className="flex items-center justify-between w-full px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70 hover:text-muted-foreground transition-colors"
+              className="flex items-center justify-between w-full px-4 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70 hover:text-muted-foreground transition-colors"
             >
               {group.label}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openGroups[group.label] ? '' : '-rotate-90'}`} />
@@ -124,7 +137,7 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
             </div>
             <button
               onClick={() => logout()}
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+              className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
               title="Logout"
             >
               <LogOut className="w-4 h-4" />
@@ -153,9 +166,9 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }) {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40">
+        <div className="lg:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-card shadow-xl">
+          <div className="absolute left-0 top-0 bottom-0 w-72 max-w-[85vw] bg-card shadow-xl">
             {content}
           </div>
         </div>

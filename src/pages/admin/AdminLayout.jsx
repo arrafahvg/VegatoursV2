@@ -14,16 +14,22 @@ export default function AdminLayout() {
       <AdminSidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
       
       {/* Mobile header */}
-      <div className="lg:hidden flex items-center justify-between p-4 bg-card border-b border-border/50">
+      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-card/95 backdrop-blur border-b border-border/50">
         <span className="font-serif text-lg font-semibold text-foreground tracking-wide">
           VEGA<span className="text-primary">TOURS</span>
         </span>
-        <Button variant="ghost" size="icon" onClick={() => setMobileOpen(true)}>
-          <Menu className="w-5 h-5" />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setMobileOpen(true)}
+          className="h-11 w-11"
+          aria-label="Open menu"
+        >
+          <Menu className="w-6 h-6" />
         </Button>
       </div>
 
-      <main className="lg:ml-64 p-4 sm:p-6 lg:p-8">
+      <main className="lg:ml-64 p-4 sm:p-6 lg:p-8 pb-16">
         <Outlet />
       </main>
     </div>

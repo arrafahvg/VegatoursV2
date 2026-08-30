@@ -53,7 +53,7 @@ export default function BookingList({ bookings, isLoading, onView, onEdit, onDel
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-6">
         {['lead','confirmed','ongoing','completed','cancelled'].map(s => (
           <div key={s} className="bg-card border border-border/50 rounded-xl p-3 text-center">
             <p className="text-2xl font-semibold text-foreground">{bookings.filter(b => b.status === s).length}</p>
@@ -67,7 +67,56 @@ export default function BookingList({ bookings, isLoading, onView, onEdit, onDel
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground bg-card border border-border/50 rounded-2xl">No bookings found</div>
       ) : (
-        <div className="bg-card border border-border/50 rounded-2xl overflow-hidden">
+        <>
+        {/* Mobile card list */}
+        <div className="md:hidden space-y-3">
+          {filtered.map(b => (
+            <div
+              key={b.id}
+              className="bg-card border border-border/50 rounded-2xl p-4 active:bg-secondary/30 transition-colors"
+              onClick={() => onView(b)}
+              role="button"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-mono text-xs text-primary font-semibold">{b.booking_code || '—'}</p>
+                  <p className="font-medium text-foreground text-sm mt-1 truncate">{b.customer_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{b.package_name || '—'}</p>
+                </div>
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize flex-shrink-0 ${STATUS_COLORS[b.status] || 'bg-secondary text-secondary-foreground'}`}>
+                  {b.status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/30">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span>{b.tour_date ? format(new Date(b.tour_date), 'dd MMM yy') : '—'}</span>
+                  <span>· {b.pax || 1} pax</span>
+                  <span>· {b.customer_country}</span>
+                </div>
+                <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+                  {b.customer_phone && (
+                    <a href={`https://wa.me/${b.customer_phone.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer"
+                      className="p-2 rounded-lg text-muted-foreground hover:text-green-600 hover:bg-green-50 transition-colors" aria-label="WhatsApp Customer">
+                      <MessageCircle className="w-4 h-4" />
+                    </a>
+                  )}
+                  <button onClick={() => onEdit(b)} className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors" aria-label="Edit booking">
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => onDelete(b)} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors" aria-label="Delete booking">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground bg-card border border-border/50 rounded-2xl">No bookings found</div>
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block bg-card border border-border/50 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
@@ -132,6 +181,7 @@ export default function BookingList({ bookings, isLoading, onView, onEdit, onDel
             </table>
           </div>
         </div>
+        </>
       )}
     </div>
   );

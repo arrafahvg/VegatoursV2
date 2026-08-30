@@ -69,12 +69,12 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Users</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold text-foreground">Users</h1>
           <p className="text-muted-foreground mt-1">Manage admin users and send invitations</p>
         </div>
-        <Button onClick={() => setInviteOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2">
+        <Button onClick={() => setInviteOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2 h-11">
           <UserPlus className="w-4 h-4" /> Invite User
         </Button>
       </div>
@@ -82,7 +82,43 @@ export default function AdminUsers() {
       {isLoading ? (
         <div className="text-center py-12 text-muted-foreground">Loading...</div>
       ) : (
-        <div className="bg-card border border-border/50 rounded-2xl overflow-hidden">
+        <>
+        {/* Mobile card list */}
+        <div className="sm:hidden space-y-3">
+          {users.map(u => (
+            <div key={u.id} className="bg-card border border-border/50 rounded-2xl p-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-sm font-semibold text-primary">{u.name?.[0] || '?'}</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-foreground text-sm truncate">{u.name || '—'}</p>
+                <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${ROLE_COLORS[u.role] || 'bg-secondary text-secondary-foreground'}`}>
+                    {ROLE_LABELS[u.role] || u.role || 'user'}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">
+                    {u.created_date ? format(new Date(u.created_date), 'dd MMM yyyy') : ''}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => handleDelete(u)}
+                disabled={deletingId === u.id}
+                className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                aria-label="Delete user"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          {users.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground bg-card border border-border/50 rounded-2xl">No users found</div>
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden sm:block bg-card border border-border/50 rounded-2xl overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border/50">
@@ -135,6 +171,7 @@ export default function AdminUsers() {
             <div className="text-center py-12 text-muted-foreground">No users found</div>
           )}
         </div>
+        </>
       )}
 
       {/* Invite Dialog */}

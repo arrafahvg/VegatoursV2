@@ -129,9 +129,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h2 className="text-xl font-semibold text-foreground">{entityName.replace(/([A-Z])/g, ' $1').trim()}s</h2>
-        <Button onClick={openCreate} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2">
+        <Button onClick={openCreate} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl gap-2 h-11">
           <Plus className="w-4 h-4" /> Add New
         </Button>
       </div>
@@ -170,11 +170,11 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
                 {renderCard(item)}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <Button variant="ghost" size="icon" onClick={() => openEdit(item)} className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                  <Pencil className="w-3.5 h-3.5" />
+                <Button variant="ghost" size="icon" onClick={() => openEdit(item)} className="h-10 w-10 text-muted-foreground hover:text-foreground" aria-label="Edit">
+                  <Pencil className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(item.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                  <Trash2 className="w-3.5 h-3.5" />
+                <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(item.id)} className="h-10 w-10 text-muted-foreground hover:text-destructive" aria-label="Delete">
+                  <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-lg w-[calc(100vw-1.5rem)] max-h-[90dvh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle>{editing ? 'Edit' : 'Add'} {entityName.replace(/([A-Z])/g, ' $1').trim()}</DialogTitle>
           </DialogHeader>
@@ -272,9 +272,9 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
                 )}
               </div>
             ))}
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="outline" onClick={closeDialog} className="rounded-xl">Cancel</Button>
-              <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+              <Button variant="outline" onClick={closeDialog} className="rounded-xl h-11">Cancel</Button>
+              <Button onClick={handleSave} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11">
                 {editing ? 'Update' : 'Create'}
               </Button>
             </div>
