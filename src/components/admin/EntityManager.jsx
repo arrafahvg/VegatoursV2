@@ -26,6 +26,7 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
   const [formData, setFormData] = useState({});
   const [search, setSearch] = useState('');
   const [filterValues, setFilterValues] = useState({});
+  const [uploading, setUploading] = useState(false);
   const queryClient = useQueryClient();
 
   const table = tableName || toSnakeCase(entityName);
@@ -304,9 +305,25 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => e.target.files[0] && handleFileUpload(field.key, e.target.files[0])}
+                      disabled={uploading}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        // Track upload progress so the Save/Create button stays
+                        // disabled until the image has finished uploading.
+                        setUploading(true);
+                        Promise.resolve(handleFileUpload(field.key, file)).finally(() => setUploading(false));
+                        // Allow selecting the same file again after a failure
+                        e.target.value = '';
+                      }}
                       className="rounded-xl"
                     />
+                    {uploading && (
+                      <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                        Uploading image, please wait...
+                      </p>
+                    )}
                   </div>
                 )}
                 {field.type === 'array' && (
@@ -348,10 +365,10 @@ export default function EntityManager({ entityName, queryKey, fields, renderCard
               </div>
             ))}
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-              <Button variant="outline" onClick={closeDialog} disabled={saving} className="rounded-xl h-11">Cancel</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 gap-2">
-                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                {saving ? 'Saving...' : (editing ? 'Update' : 'Create')}
+              <Button variant="outline" onClick={closeDialog} disabled={saving || uploading} className="rounded-xl h-11">Cancel</Button>
+              <Button onClick={handleSave} disabled={saving || uploading} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 gap-2">
+                {(saving || uploading) && <Loader2 className="w-4 h-4 animate-spin" />}
+                {uploading ? 'Uploading image...' : saving ? 'Saving...' : (editing ? 'Update' : 'Create')}
               </Button>
             </div>
           </div>

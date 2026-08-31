@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { formatPriceRange, formatPrice } from '@/lib/utils';
 import { Clock, MapPin, Star, ArrowRight, Users, CheckCircle, Info, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import PriceDisplay from '@/components/PriceDisplay';
 
 function PackagesContent() {
   const { t, lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   const [selectedPkg, setSelectedPkg] = useState(null);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
@@ -274,7 +275,7 @@ function PackagesContent() {
                         {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                       </Button>
                       <a
-                        href={WHATSAPP_MESSAGE_URL(
+                        href={getWhatsappMessageUrl(
                           lang === 'id'
                             ? `Halo, saya ingin memesan armada ${v.name}. Apakah tersedia?`
                             : `Hello, I'd like to book the ${v.name}. Is it available?`

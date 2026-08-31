@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 import { ArrowRight, CheckCircle, Info, Bike } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -15,6 +16,7 @@ import BikeDetailModal from '@/components/landing/BikeDetailModal';
 
 function BikeRentContent() {
   const { lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   const [selectedBike, setSelectedBike] = useState(null);
 
   useEffect(() => {
@@ -137,12 +139,25 @@ function BikeRentContent() {
                         )}
                       </div>
                       <h3 className="font-serif text-lg font-medium text-foreground mb-2">{bike.name}</h3>
-                      {bike.price && (
-                        <p className="text-base font-semibold text-foreground mb-3">
-                          {bike.price}
-                          <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                        </p>
-                      )}
+                      {bike.price ? (
+                        bike.price_max ? (
+                          <p className="text-base font-semibold text-foreground mb-3">
+                            {formatPriceRange(bike.price, bike.price_max)}
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        ) : bike.price_discount ? (
+                          <p className="text-base font-semibold text-foreground mb-3">
+                            <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(bike.price)}</span>
+                            <span className="text-primary">{formatPrice(bike.price_discount)}</span>
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        ) : (
+                          <p className="text-base font-semibold text-foreground mb-3">
+                            {formatPrice(bike.price)}
+                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
+                          </p>
+                        )
+                      ) : null}
                       {bike.features?.length > 0 && (
                         <div className="space-y-1 mb-3">
                           {bike.features.slice(0, 2).map((f, j) => (
@@ -169,7 +184,7 @@ function BikeRentContent() {
                               {lang === 'id' ? 'Tidak Tersedia' : 'Not Available'}
                             </div>
                           ) : (
-                            <a href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)} target="_blank" rel="noopener noreferrer" className="flex-1">
+                            <a href={getWhatsappMessageUrl(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)} target="_blank" rel="noopener noreferrer" className="flex-1">
                               <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full group/btn">
                                 {ctaText}
                                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />

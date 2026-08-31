@@ -2,11 +2,13 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CheckCircle, AlertCircle, Bike } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 export default function BikeDetailModal({ bike, open, onClose }) {
-  const { lang } = useLang();
+    const { lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   if (!bike) return null;
 
   const isId = lang === 'id';
@@ -28,10 +30,19 @@ export default function BikeDetailModal({ bike, open, onClose }) {
 
         <div className="space-y-5">
           {/* Price */}
-          {bike.price && (
+          {bike.price ? (
             <div>
               <p className="text-2xl font-semibold text-foreground">
-                {bike.price}
+                {bike.price_max ? (
+                  formatPriceRange(bike.price, bike.price_max)
+                ) : bike.price_discount ? (
+                  <>
+                    <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(bike.price)}</span>
+                    <span className="text-primary">{formatPrice(bike.price_discount)}</span>
+                  </>
+                ) : (
+                  formatPrice(bike.price)
+                )}
                 <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
               </p>
               {bike.capacity && (
@@ -40,7 +51,7 @@ export default function BikeDetailModal({ bike, open, onClose }) {
                 </p>
               )}
             </div>
-          )}
+          ) : null}
 
           {/* Includes */}
           {(() => {
@@ -114,7 +125,7 @@ export default function BikeDetailModal({ bike, open, onClose }) {
             </div>
           ) : (
           <a
-            href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)}
+            href={getWhatsappMessageUrl(`Hi! I'm interested in renting the ${bike.name} (${bike.type || ''}).`)}
             target="_blank"
             rel="noopener noreferrer"
             className="block"

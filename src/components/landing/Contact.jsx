@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLang } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { WHATSAPP_URL, WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,6 +10,7 @@ import { MessageCircle, Send, Mail, CheckCircle } from 'lucide-react';
 
 export default function Contact() {
   const { t } = useLang();
+  const { whatsappUrl, getWhatsappMessageUrl } = useSiteSettings();
   const [form, setForm] = useState({ name: '', email: '', dates: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export default function Contact() {
     setSubmitted(true);
     // Also open WhatsApp
     const msg = `Hi! I'm ${form.name}.\nTravel dates: ${form.dates}\nEmail: ${form.email}\n\n${form.message}`;
-    window.open(WHATSAPP_MESSAGE_URL(msg), '_blank');
+    window.open(getWhatsappMessageUrl(msg), '_blank');
   };
 
   return (
@@ -118,7 +119,7 @@ export default function Contact() {
               <p className="text-muted-foreground max-w-sm leading-relaxed">
                 {t('contact.subtitle')}
               </p>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full py-6 text-base font-medium px-10 my-3">
                   <MessageCircle className="w-5 h-5 mr-2" />
                   {t('contact.whatsappCta')}

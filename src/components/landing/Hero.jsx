@@ -2,14 +2,15 @@ import React from 'react';
 import { useLang } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { WHATSAPP_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { ArrowRight, Star, MapPin, Users, Car, Bike } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HERO_IMG = '/images/hero.jpg';
 
 export default function Hero() {
-  const { t } = useLang();
+    const { t } = useLang();
+  const { whatsappUrl } = useSiteSettings();
   const trustIcons = [Star, MapPin, Users];
 
   return (
@@ -48,7 +49,7 @@ export default function Hero() {
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
                 variant="outline"

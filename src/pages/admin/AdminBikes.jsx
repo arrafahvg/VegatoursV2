@@ -1,18 +1,21 @@
 import React from 'react';
 import EntityManager from '@/components/admin/EntityManager';
+import { formatPriceRange, formatPrice } from '@/lib/utils';
 
 const fields = [
   { key: 'name', label: 'Bike Name', type: 'text', placeholder: 'e.g. Honda Vario 150' },
   { key: 'type', label: 'Bike Type', type: 'text', placeholder: 'e.g. Automatic, Manual, Sport' },
   { key: 'capacity', label: 'Engine Capacity (CC)', type: 'text', placeholder: 'e.g. 150cc, 250cc' },
-  { key: 'price', label: 'Price', type: 'text', placeholder: 'e.g. IDR 200,000' },
+  { key: 'price', label: 'Price (numbers only, e.g. 200000 = Rp200,000,-)', type: 'number', placeholder: 'e.g. 200000' },
+  { key: 'price_max', label: 'Price Max — optional. Enter to show a RANGE (e.g. 500000 => Rp200,000,- – Rp500,000,-). Discount is ignored when a range is set.', type: 'number', placeholder: 'e.g. 500000' },
+  { key: 'price_discount', label: 'Discounted Price — optional. Enter for a single price with the original struck through (e.g. 150000). Only for single prices, not ranges.', type: 'number', placeholder: 'e.g. 150000', hidden: (fd) => !!fd.price_max },
   { key: 'includes_en', label: 'Included (English)', type: 'array' },
   { key: 'includes_id', label: 'Termasuk (Bahasa Indonesia)', type: 'array' },
   { key: 'terms_en', label: 'Terms & Conditions (English)', type: 'array' },
   { key: 'terms_id', label: 'Ketentuan (Bahasa Indonesia)', type: 'array' },
   { key: 'features', label: 'Features / Fasilitas Tambahan', type: 'array' },
   { key: 'image_url', label: 'Photo', type: 'image' },
-  { key: 'price_note', label: 'Price Note', type: 'text', placeholder: 'e.g. Harga per hari,不包括 bensin' },
+  { key: 'price_note', label: 'Price Note', type: 'text', placeholder: 'e.g. Harga per hari, tidak termasuk bensin' },
   { key: 'is_available', label: 'Available for Rent / Tersedia Untuk Disewa', type: 'boolean' },
   { key: 'sort_order', label: 'Sort Order', type: 'number' },
 ];
@@ -38,7 +41,19 @@ export default function AdminBikes() {
                 <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Available</span>
               )}
             </p>
-            <p className="text-xs text-muted-foreground">{item.type}{item.capacity ? ` · ${item.capacity}` : ''}{item.price ? ` · ${item.price}` : ''}</p>
+            <p className="text-xs text-muted-foreground">{item.type}{item.capacity ? ` · ${item.capacity}` : ''}</p>
+            {item.price ? (
+              item.price_max ? (
+                <p className="text-xs text-muted-foreground">{formatPriceRange(item.price, item.price_max)}</p>
+              ) : item.price_discount ? (
+                <p className="text-xs">
+                  <span className="line-through text-muted-foreground mr-1">{formatPrice(item.price)}</span>
+                  <span className="font-semibold text-primary">{formatPrice(item.price_discount)}</span>
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{formatPrice(item.price)}</p>
+              )
+            ) : null}
           </div>
         </div>
       )}

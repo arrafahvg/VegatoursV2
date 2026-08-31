@@ -3,13 +3,15 @@ import { useLang } from '@/lib/i18n';
 import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { WHATSAPP_URL, LOGO_URL } from '@/lib/constants';
+import { LOGO_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Link, useNavigate } from 'react-router-dom';
 
 const navLinks = ['services', 'destinations', 'gallery', 'about', 'contact'];
 
 export default function Navbar({ solid = false }) {
-  const { lang, toggleLang, t } = useLang();
+    const { lang, toggleLang, t } = useLang();
+  const { whatsappUrl } = useSiteSettings();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -111,7 +113,7 @@ export default function Navbar({ solid = false }) {
                 {lang === 'en' ? 'ID' : 'EN'}
               </button>
 
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hidden lg:block">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hidden lg:block">
                 <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 font-medium text-sm">
                   {t('whatsapp.cta')}
                 </Button>
@@ -176,7 +178,7 @@ export default function Navbar({ solid = false }) {
                   {t(`nav.${link}`)}
                 </button>
               ))}
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-4">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="mt-4">
                 <Button className="bg-primary text-primary-foreground rounded-full px-8 py-3 text-base">
                   {t('whatsapp.cta')}
                 </Button>

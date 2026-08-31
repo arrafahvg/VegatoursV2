@@ -3,15 +3,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { CheckCircle, Users, AlertCircle, MessageCircle } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { formatPriceRange, formatPrice } from '@/lib/utils';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Button } from '@/components/ui/button';
 
 export default function FleetDetailModal({ vehicle, open, onClose }) {
-  const { lang } = useLang();
+    const { lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   if (!vehicle) return null;
 
   const isId = lang === 'id';
-  const bookUrl = WHATSAPP_MESSAGE_URL(
+    const bookUrl = getWhatsappMessageUrl(
     isId
       ? `Halo, saya ingin memesan armada ${vehicle.name}. Apakah tersedia?`
       : `Hello, I'd like to book the ${vehicle.name}. Is it available?`

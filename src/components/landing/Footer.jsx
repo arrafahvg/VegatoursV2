@@ -1,6 +1,7 @@
 import React from 'react';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { useLang } from '@/lib/i18n';
-import { WHATSAPP_URL, LOGO_URL } from '@/lib/constants';
+import { formatWhatsAppDisplay, LOGO_URL } from '@/lib/constants';
 import { Globe, MessageCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ const navLinks = ['services', 'packages', 'destinations', 'gallery', 'about', 'c
 export default function Footer() {
   const { t, lang, toggleLang } = useLang();
   const navigate = useNavigate();
+  const { whatsappUrl, whatsappNumber } = useSiteSettings();
 
   const scrollTo = (id) => {
     if (window.location.pathname !== '/') {
@@ -36,7 +38,7 @@ export default function Footer() {
             </p>
             <div className="mt-6 flex gap-3">
               <a
-                href={WHATSAPP_URL}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
@@ -78,9 +80,9 @@ export default function Footer() {
             <h4 className="font-semibold text-background text-sm uppercase tracking-widest mb-4">{t('footer.getInTouch')}</h4>
             <div className="space-y-3 text-sm text-background/60">
               <p>Bali, Indonesia</p>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors">
                 <MessageCircle className="w-4 h-4" />
-                +62 896 461 000
+                {whatsappNumber ? formatWhatsAppDisplay(whatsappNumber) : '+62 896 461 000'}
               </a>
             </div>
           </div>

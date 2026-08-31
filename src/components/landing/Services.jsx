@@ -1,13 +1,14 @@
 import React from 'react';
 import { useLang } from '@/lib/i18n';
 import { motion } from 'framer-motion';
-import { WHATSAPP_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Map, Compass, Car, Sun, Mountain, Sunset, Palmtree, Handshake } from 'lucide-react';
 
 const icons = [Map, Compass, Car, Sun, Mountain, Sunset, Palmtree, Handshake];
 
 export default function Services() {
   const { t } = useLang();
+  const { whatsappUrl } = useSiteSettings();
   const items = t('services.items');
 
   return (
@@ -33,7 +34,7 @@ export default function Services() {
                 transition={{ delay: i * 0.05 }}
               >
                 <a
-                  href={WHATSAPP_URL}
+                                    href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block group p-6 rounded-2xl bg-background border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"

@@ -3,13 +3,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Clock, MapPin, Star, ArrowRight, AlertCircle } from 'lucide-react';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { useLang } from '@/lib/i18n';
 import PriceDisplay from '@/components/PriceDisplay';
 import MarkdownView from '@/components/MarkdownView';
 
 export default function PackageDetailModal({ pkg, open, onClose }) {
-  const { t, lang } = useLang();
+    const { t, lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   if (!pkg) return null;
 
   const isId = lang === 'id';
@@ -75,7 +76,7 @@ export default function PackageDetailModal({ pkg, open, onClose }) {
 
           {/* CTA */}
           <a
-            href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in the ${pkg.title_en} package.`)}
+            href={getWhatsappMessageUrl(`Hi! I'm interested in the ${pkg.title_en} package.`)}
             target="_blank"
             rel="noopener noreferrer"
             className="block"
