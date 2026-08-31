@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useLang } from '@/lib/i18n';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import PriceDisplay from '@/components/PriceDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowRight, MapPin, Users, Bike, Car, Compass } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import useEmblaCarousel from 'embla-carousel-react';
+import { ArrowRight, ArrowLeft, MapPin, Users, Bike, Car, Compass, Info } from 'lucide-react';
+import PackageDetailModal from '@/components/landing/PackageDetailModal';
+import FleetDetailModal from '@/components/landing/FleetDetailModal';
+import BikeDetailModal from '@/components/landing/BikeDetailModal';
+
+const FEATURED_LIMIT = 5;
 
 function FallbackImage({ alt, className }) {
   return (
@@ -19,7 +27,7 @@ function SeeMoreCard({ to, label }) {
   return (
     <Link
       to={to}
-      className="group flex flex-col items-center justify-center gap-3 min-h-[220px] rounded-2xl border border-dashed border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-colors"
+      className="group flex flex-col items-center justify-center gap-3 min-h-[260px] h-full rounded-2xl border border-dashed border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-colors"
     >
       <span className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
         <ArrowRight className="w-5 h-5" />
@@ -29,11 +37,11 @@ function SeeMoreCard({ to, label }) {
   );
 }
 
-function Card({ to, image, imageAlt, badge, badgeIcon: BadgeIcon, title, subtitle, price, priceMax, priceDiscount, note }) {
+function Card({ onDetails, ctaHref, ctaLabel, image, imageAlt, badge, badgeIcon: BadgeIcon, title, subtitle, price, priceMax, priceDiscount, note }) {
   return (
-    <Link
-      to={to}
-      className="group rounded-2xl overflow-hidden bg-card border border-border/50 hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
+    <div
+      onClick={onDetails}
+      className="group cursor-pointer rounded-2xl overflow-hidden bg-card border border-border/50 hover:border-primary/40 hover:shadow-lg transition-all flex flex-col h-full"
     >
       {image ? (
         <div className="relative h-40 overflow-hidden">
@@ -61,19 +69,93 @@ function Card({ to, image, imageAlt, badge, badgeIcon: BadgeIcon, title, subtitl
             <PriceDisplay price={price} priceMax={priceMax} priceDiscount={priceDiscount} className="text-sm" />
           ) : null}
           {note && <p className="text-[10px] text-muted-foreground italic mt-0.5">{note}</p>}
+          <div className="flex gap-2 pt-3" onClick={(e) => e.stopPropagation()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDetails}
+              className="rounded-full gap-1.5 font-medium border-primary text-primary hover:bg-primary hover:text-primary-foreground flex-shrink-0"
+            >
+              <Info className="w-3.5 h-3.5" />
+              See Details
+            </Button>
+            <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="flex-1">
+              <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full group/btn">
+                {ctaLabel}
+                <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover/btn:translate-x-1" />
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
+function useCarouselControls() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', dragFree: true, containScroll: 'trimSnaps' });
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const onSelect = useCallback((api) => {
+    if (!api) return;
+    setCanPrev(api.canScrollPrev());
+    setCanNext(api.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  return {
+    emblaRef,
+    canPrev,
+    canNext,
+    scrollPrev: () => emblaApi?.scrollPrev(),
+    scrollNext: () => emblaApi?.scrollNext(),
+  };
+}
+
 function Group({ title, icon: Icon, isLoading, children }) {
+  const { emblaRef, canPrev, canNext, scrollPrev, scrollNext } = useCarouselControls();
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-5">
         {Icon && <Icon className="w-5 h-5 text-primary" />}
         <h3 className="font-serif text-xl font-medium text-foreground">{title}</h3>
         <div className="flex-1 h-px bg-border/60 ml-2" />
+        {!isLoading && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={scrollPrev}
+              disabled={!canPrev}
+              aria-label="Previous"
+              className="rounded-full h-8 w-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={scrollNext}
+              disabled={!canNext}
+              aria-label="Next"
+              className="rounded-full h-8 w-8"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
       {isLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -89,7 +171,15 @@ function Group({ title, icon: Icon, isLoading, children }) {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{children}</div>
+        <div ref={emblaRef} className="overflow-hidden">
+          <div className="flex -ml-4 touch-pan-y">
+            {React.Children.map(children, (child) => (
+              <div className="pl-4 min-w-0 shrink-0 grow-0 basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                {child}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -98,6 +188,11 @@ function Group({ title, icon: Icon, isLoading, children }) {
 export default function FeaturedCollections() {
   const { lang } = useLang();
   const isId = lang === 'id';
+  const { getWhatsappMessageUrl } = useSiteSettings();
+
+  const [selectedPkg, setSelectedPkg] = useState(null);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [selectedBike, setSelectedBike] = useState(null);
 
   const { data: packages = [], isLoading: loadingPkgs } = useQuery({
     queryKey: ['tourPackages'],
@@ -106,7 +201,7 @@ export default function FeaturedCollections() {
         .from('tour_packages')
         .select('*')
         .order('sort_order', { ascending: true })
-        .limit(3);
+        .limit(FEATURED_LIMIT);
       if (error) throw error;
       return data || [];
     },
@@ -119,7 +214,7 @@ export default function FeaturedCollections() {
         .from('fleet')
         .select('*')
         .order('sort_order', { ascending: true })
-        .limit(3);
+        .limit(FEATURED_LIMIT);
       if (error) throw error;
       return data || [];
     },
@@ -132,7 +227,7 @@ export default function FeaturedCollections() {
         .from('bikes')
         .select('*')
         .order('sort_order', { ascending: true })
-        .limit(3);
+        .limit(FEATURED_LIMIT);
       if (error) throw error;
       return data || [];
     },
@@ -144,6 +239,9 @@ export default function FeaturedCollections() {
   if (empty) return null;
 
   const seeMoreLabel = isId ? 'Lihat Semua' : 'See More';
+  const rentLabel = isId ? 'Sewa Sekarang' : 'Rent Now';
+  const bookLabel = (pkg) =>
+    (isId && pkg.cta_text_id) || pkg.cta_text_en || (isId ? 'Pesan Tur Ini' : 'Book This Tour');
 
   return (
     <section className="py-16 lg:py-24 bg-background">
@@ -164,9 +262,11 @@ export default function FeaturedCollections() {
           {packages.map((pkg) => (
             <Card
               key={pkg.id}
-              to="/packages#packages"
+              onDetails={() => setSelectedPkg(pkg)}
+              ctaHref={getWhatsappMessageUrl(`Hi! I'm interested in the ${pkg.title_en} package.`)}
+              ctaLabel={bookLabel(pkg)}
               image={pkg.image_url}
-              imageAlt={pkg.name}
+              imageAlt={pkg.title_en}
               title={isId && pkg.title_id ? pkg.title_id : pkg.title_en}
               badge={isId && pkg.duration_id ? pkg.duration_id : pkg.duration_en}
               price={pkg.price}
@@ -182,7 +282,9 @@ export default function FeaturedCollections() {
           {fleet.map((v) => (
             <Card
               key={v.id}
-              to="/packages#fleet"
+              onDetails={() => setSelectedVehicle(v)}
+              ctaHref={getWhatsappMessageUrl(`Hi! I'd like to rent the ${v.name}.`)}
+              ctaLabel={rentLabel}
               image={v.image_url}
               imageAlt={v.name}
               title={v.name}
@@ -202,7 +304,9 @@ export default function FeaturedCollections() {
           {bikes.map((bike) => (
             <Card
               key={bike.id}
-              to="/bike-rent"
+              onDetails={() => setSelectedBike(bike)}
+              ctaHref={getWhatsappMessageUrl(`Hi! I'd like to rent the ${bike.name}.`)}
+              ctaLabel={rentLabel}
               image={bike.image_url}
               imageAlt={bike.name}
               title={bike.name}
@@ -218,6 +322,23 @@ export default function FeaturedCollections() {
           <SeeMoreCard to="/bike-rent" label={seeMoreLabel} />
         </Group>
       </div>
+
+      {/* Detail modals — shared, rendered outside the carousels */}
+      <PackageDetailModal
+        pkg={selectedPkg}
+        open={!!selectedPkg}
+        onClose={() => setSelectedPkg(null)}
+      />
+      <FleetDetailModal
+        vehicle={selectedVehicle}
+        open={!!selectedVehicle}
+        onClose={() => setSelectedVehicle(null)}
+      />
+      <BikeDetailModal
+        bike={selectedBike}
+        open={!!selectedBike}
+        onClose={() => setSelectedBike(null)}
+      />
     </section>
   );
 }
