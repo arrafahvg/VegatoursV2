@@ -185,9 +185,53 @@ const translations = {
 
 const LanguageContext = createContext();
 
+// localStorage key for the visitor's manual language choice
+const LANG_STORAGE_KEY = 'vegatours_lang';
+
+// Initial language, computed once:
+// 1. A previously saved choice wins (persists across pages & reloads).
+// 2. First visit: auto-detect the visitor's browser language — Indonesian
+//    browsers get Bahasa Indonesia, everyone else gets English (default).
+function getInitialLang() {
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    if (saved === 'id' || saved === 'en') return saved;
+  } catch (e) {
+    // localStorage unavailable (e.g. private mode) — fall through to detection
+  }
+  const browserLangs = [
+    ...(navigator.languages || []),
+    navigator.language,
+  ].filter(Boolean);
+  const isIndonesian = browserLangs.some((l) => String(l).toLowerCase().startsWith('id'));
+  return isIndonesian ? 'id' : 'en';
+}
+
+// Persist the visitor's choice so it survives reloads and navigation.
+function saveLang(lang) {
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+  } catch (e) {
+    // Ignore storage errors — the choice just won't persist
+  }
+}
+
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('en');
-  const toggleLang = useCallback(() => setLang(l => l === 'en' ? 'id' : 'en'), []);
+  const [lang, setLangState] = useState(getInitialLang);
+
+  const setLang = useCallback((l) => {
+    setLangState(l);
+    saveLang(l);
+  }, []);
+
+  const toggleLang = useCallback(() => {
+    setLangState((prev) => {
+      const next = prev === 'en' ? 'id' : 'en';
+      saveLang(next);
+      return next;
+    });
+  }, []);
+
   const t = useCallback((path) => {
     const keys = path.split('.');
     let val = translations[lang];
