@@ -166,7 +166,7 @@ function PackagesContent() {
                             <Info className="w-3.5 h-3.5" />
                             {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                           </Button>
-                          <a href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in the ${pkg.title_en} package.`)} target="_blank" rel="noopener noreferrer" className="flex-1">
+                          <a href={getWhatsappMessageUrl(`Hi! I'm interested in the ${pkg.title_en} package.`)} target="_blank" rel="noopener noreferrer" className="flex-1">
                             <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full group/btn">
                               {ctaText}
                               <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />

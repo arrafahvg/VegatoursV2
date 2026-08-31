@@ -92,6 +92,8 @@ function Group({ title, icon: Icon, isLoading, children }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{children}</div>
       )}
     </div>
+  );
+}
 
 export default function FeaturedCollections() {
   const { lang } = useLang();
@@ -165,8 +167,8 @@ export default function FeaturedCollections() {
               to="/packages#packages"
               image={pkg.image_url}
               imageAlt={pkg.name}
-              title={pkg.name}
-              badge={pkg.duration}
+              title={isId && pkg.title_id ? pkg.title_id : pkg.title_en}
+              badge={isId && pkg.duration_id ? pkg.duration_id : pkg.duration_en}
               price={pkg.price}
               priceMax={pkg.price_max}
               priceDiscount={pkg.price_discount}
