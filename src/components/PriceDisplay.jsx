@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatPrice, formatPriceRange, hasPriceDiscount } from '@/lib/utils';
+import { formatPrice, hasPriceDiscount } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 // Renders a price as either:

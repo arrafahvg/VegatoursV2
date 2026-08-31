@@ -93,7 +93,7 @@ function BikeRentContent() {
                   : 'Please contact us for the latest availability.'}
               </p>
               <a
-                href={WHATSAPP_MESSAGE_URL("Hi! I'd like to check the current bike availability.")}
+                href={getWhatsappMessageUrl("Hi! I'd like to check the current bike availability.")}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -6,7 +6,7 @@ import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Send, Mail, CheckCircle } from 'lucide-react';
+import { MessageCircle, Send, CheckCircle } from 'lucide-react';
 
 export default function Contact() {
   const { t } = useLang();

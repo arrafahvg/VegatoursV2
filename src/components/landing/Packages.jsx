@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
+import { useSiteSettings } from '@/lib/hooks/useSiteSettings';
 import { Clock, MapPin, Star, ArrowRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ import PackageDetailModal from './PackageDetailModal';
 
 export default function Packages() {
   const { t, lang } = useLang();
+  const { getWhatsappMessageUrl } = useSiteSettings();
   const [selectedPkg, setSelectedPkg] = useState(null);
 
   const { data: packages, isLoading } = useQuery({
@@ -127,7 +128,7 @@ export default function Packages() {
                           {lang === 'id' ? 'Lihat Detail' : 'See Details'}
                         </Button>
                         <a
-                          href={WHATSAPP_MESSAGE_URL(`Hi! I'm interested in the ${pkg.title_en} package.`)}
+                          href={getWhatsappMessageUrl(`Hi! I'm interested in the ${pkg.title_en} package.`)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex-1"

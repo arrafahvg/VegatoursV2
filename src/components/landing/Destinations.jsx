@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 import { motion } from 'framer-motion';
-import { WHATSAPP_MESSAGE_URL } from '@/lib/constants';
 
 const fallbackImages = [
   '/images/destination-1.jpg',
