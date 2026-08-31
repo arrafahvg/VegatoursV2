@@ -264,12 +264,12 @@ function PackagesContent() {
                         {v.features.length > 2 && <p className="text-xs text-muted-foreground pl-5">+{v.features.length - 2} more...</p>}
                       </div>
                     )}
-                    <div className="mt-auto pt-3 border-t border-border/50 space-y-2">
+                    <div className="mt-auto pt-3 border-t border-border/50 flex gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setSelectedVehicle(v)}
-                        className="rounded-full gap-1.5 w-full"
+                        className="rounded-full gap-1.5 flex-1"
                       >
                         <Info className="w-3.5 h-3.5" />
                         {lang === 'id' ? 'Lihat Detail' : 'See Details'}
@@ -282,10 +282,11 @@ function PackagesContent() {
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="flex-1"
                       >
                         <Button
                           size="sm"
-                          className="rounded-full gap-1.5 w-full bg-green-600 hover:bg-green-700 text-white"
+                          className="w-full rounded-full gap-1.5 bg-green-600 hover:bg-green-700 text-white"
                         >
                           <MessageCircle className="w-3.5 h-3.5" />
                           {lang === 'id' ? 'Pesan Armada Ini' : 'Book This Fleet'}
