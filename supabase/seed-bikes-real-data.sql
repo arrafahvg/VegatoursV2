@@ -29,7 +29,7 @@ VALUES
    '["Helm","Tempat HP"]',
    'Automatic', 1, '110cc', 450000, 1200000,
    'Cheapest daily rate — best for short city rides', '6a6700000000000000000001',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Honda Scoopy 110
   ('["Helmet Included","Retro Style","Storage Box","Fuel Efficient"]', 100000,
@@ -41,7 +41,7 @@ VALUES
    '["2 Helm","Bagasi","Tempat HP"]',
    'Automatic', 2, '110cc', 600000, 1500000,
    'Stylish retro scooter, great for Canggu & Ubud', '6a6700000000000000000002',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Honda Vario 125
   ('["Helmet Included","CBS Braking","Fuel Efficient","Comfortable Seat"]', 125000,
@@ -53,7 +53,7 @@ VALUES
    '["2 Helm","Bagasi","Jas hujan"]',
    'Automatic', 3, '125cc', 700000, 1600000,
    'Best value all-round city scooter', '6a6700000000000000000003',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Honda Vario 160
   ('["Helmet Included","CBS Braking","Sporty Design","USB Charger"]', 150000,
@@ -65,7 +65,7 @@ VALUES
    '["2 Helm","Bagasi","Tempat HP"]',
    'Automatic', 4, '160cc', 800000, 1700000,
    'Sporty 160cc — most popular with long-stay travellers', '6a6700000000000000000004',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Honda PCX 160
   ('["Helmet Included","ABS Braking","Large Storage","Premium Comfort"]', 175000,
@@ -77,7 +77,7 @@ VALUES
    '["2 Helm","Bagasi Besar","Tempat HP"]',
    'Automatic', 5, '160cc', 1000000, 2200000,
    'Premium maxi-scooter — most comfortable for 2 riders', '6a6700000000000000000005',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Yamaha NMAX 155
   ('["Helmet Included","ABS Braking","TFT Display","Keyless System"]', 200000,
@@ -89,7 +89,7 @@ VALUES
    '["2 Helm","Bagasi","Tempat HP"]',
    'Automatic', 6, '155cc', 1200000, 2500000,
    'Powerful 155cc with ABS — great for longer trips', '6a6700000000000000000006',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true),
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true),
 
   -- Honda CB150X
   ('["Helmet Included","Manual Transmission","Adventure Style","Long Distance"]', 250000,
@@ -101,6 +101,6 @@ VALUES
    '["Helm","Asuransi Dasar"]',
    'Manual', 7, '150cc', 1400000, 3000000,
    'Adventure-style manual bike for off-road & long tours', '6a6700000000000000000007',
-   now(), now(), 'arrafahvega@gmail.com', 'seed', true)
+   now(), now(), '6a0947b7b4a68dcdea755505', 'arrafahvega@gmail.com', true)
 ON CONFLICT (id) DO NOTHING;
 
