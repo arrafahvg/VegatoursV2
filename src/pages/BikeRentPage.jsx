@@ -13,6 +13,7 @@ import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import BikeDetailModal from '@/components/landing/BikeDetailModal';
+import Seo from '@/components/Seo';
 
 function BikeRentContent() {
   const { lang } = useLang();
@@ -140,23 +141,27 @@ function BikeRentContent() {
                       </div>
                       <h3 className="font-serif text-lg font-medium text-foreground mb-2">{bike.name}</h3>
                       {bike.price ? (
-                        bike.price_max ? (
-                          <p className="text-base font-semibold text-foreground mb-3">
-                            {formatPriceRange(bike.price, bike.price_max)}
+                        <div className="mb-3">
+                          <p className="text-base font-semibold text-foreground">
+                            {bike.price_max ? (
+                              formatPriceRange(bike.price, bike.price_max)
+                            ) : bike.price_discount ? (
+                              <>
+                                <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(bike.price)}</span>
+                                <span className="text-primary">{formatPrice(bike.price_discount)}</span>
+                              </>
+                            ) : (
+                              formatPrice(bike.price)
+                            )}
                             <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
                           </p>
-                        ) : bike.price_discount ? (
-                          <p className="text-base font-semibold text-foreground mb-3">
-                            <span className="line-through text-muted-foreground font-normal mr-2">{formatPrice(bike.price)}</span>
-                            <span className="text-primary">{formatPrice(bike.price_discount)}</span>
-                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                          </p>
-                        ) : (
-                          <p className="text-base font-semibold text-foreground mb-3">
-                            {formatPrice(bike.price)}
-                            <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
-                          </p>
-                        )
+                          {(bike.price_weekly || bike.price_monthly) && (
+                            <div className="text-xs text-muted-foreground leading-relaxed">
+                              {bike.price_weekly && <p>{formatPrice(bike.price_weekly)} / {lang === 'id' ? 'minggu' : 'week'}</p>}
+                              {bike.price_monthly && <p>{formatPrice(bike.price_monthly)} / {lang === 'id' ? 'bulan' : 'month'}</p>}
+                            </div>
+                          )}
+                        </div>
                       ) : null}
                       {bike.features?.length > 0 && (
                         <div className="space-y-1 mb-3">
@@ -213,6 +218,7 @@ function BikeRentContent() {
 export default function BikeRentPage() {
   return (
     <LanguageProvider>
+      <Seo path="/bike-rent" />
       <BikeRentContent />
     </LanguageProvider>
   );

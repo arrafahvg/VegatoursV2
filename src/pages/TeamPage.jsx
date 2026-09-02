@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
+import Seo from '@/components/Seo';
 
 function TeamContent() {
   const { t, lang } = useLang();
@@ -88,6 +89,7 @@ function TeamContent() {
 export default function TeamPage() {
   return (
     <LanguageProvider>
+      <Seo path="/team" />
       <TeamContent />
     </LanguageProvider>
   );

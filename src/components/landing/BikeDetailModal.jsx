@@ -45,6 +45,12 @@ export default function BikeDetailModal({ bike, open, onClose }) {
                 )}
                 <sup className="text-[10px] text-muted-foreground font-normal align-super ml-0.5">*</sup>
               </p>
+              {(bike.price_weekly || bike.price_monthly) && (
+                <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  {bike.price_weekly && <p>{formatPrice(bike.price_weekly)} / {isId ? 'minggu' : 'week'}</p>}
+                  {bike.price_monthly && <p>{formatPrice(bike.price_monthly)} / {isId ? 'bulan' : 'month'}</p>}
+                </div>
+              )}
               {bike.capacity && (
                 <p className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                   <Bike className="w-3.5 h-3.5" /> {bike.capacity}

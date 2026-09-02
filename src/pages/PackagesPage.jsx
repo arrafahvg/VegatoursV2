@@ -15,6 +15,7 @@ import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import PackageDetailModal from '@/components/landing/PackageDetailModal';
 import FleetDetailModal from '@/components/landing/FleetDetailModal';
+import Seo from '@/components/Seo';
 import PriceDisplay from '@/components/PriceDisplay';
 
 function PackagesContent() {
@@ -313,6 +314,7 @@ function PackagesContent() {
 export default function PackagesPage() {
   return (
     <LanguageProvider>
+      <Seo path="/packages" />
       <PackagesContent />
     </LanguageProvider>
   );

@@ -15,10 +15,12 @@ import FAQs from '@/components/landing/FAQs';
 import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
+import Seo from '@/components/Seo';
 
 export default function Home() {
   return (
     <LanguageProvider>
+      <Seo path="/" />
       <div className="min-h-screen bg-background">
         <Navbar />
         <Hero />
